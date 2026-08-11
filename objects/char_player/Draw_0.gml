@@ -1,0 +1,17 @@
+draw_self();
+/*
+if(keyboard_check(vk_enter)){
+	draw_set_color(c_red);
+	if(dir==DIR_CHAR.UP){
+		draw_rectangle(x-sprite_width/2+4,y-5,x+sprite_width/2-4,y-sprite_height+5,true);
+	}
+	if(dir==DIR_CHAR.DOWN){
+		draw_rectangle(x-sprite_width/2+4,y-sprite_height+22,x+sprite_width/2-4,y+10,true);
+	}
+	if(dir==DIR_CHAR.LEFT){
+		draw_rectangle(x,y-sprite_height+22,x+sprite_width/2-25,y-1,true);
+	}
+	if(dir==DIR_CHAR.RIGHT){
+		draw_rectangle(x,y-sprite_height+22,x+sprite_width/2+5,y-1,true);
+	}
+}

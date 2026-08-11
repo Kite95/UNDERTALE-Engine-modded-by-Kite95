@@ -1,0 +1,19 @@
+if(instance_exists(_inst_title)){
+	instance_destroy(_inst_title);
+}
+if(instance_exists(_inst_exit)){
+	instance_destroy(_inst_exit);
+}
+if(instance_exists(_inst_language_title)){
+	instance_destroy(_inst_language_title);
+}
+if(instance_exists(_inst_language)){
+	instance_destroy(_inst_language);
+}
+if(instance_exists(_inst_border_title)){
+	instance_destroy(_inst_border_title);
+}
+if(instance_exists(_inst_border)){
+	instance_destroy(_inst_border);
+}
+alarm[1]=1;

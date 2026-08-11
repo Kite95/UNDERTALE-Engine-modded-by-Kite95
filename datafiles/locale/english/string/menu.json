@@ -1,0 +1,31 @@
+{
+    "menu.instruction": "{color_text `ltgray`} --- Instruction ---{space_y -1}\n\n{space_y 2}[Z or ENTER] - Confirm\n[X or SHIFT] - Cancel\n[C or CTRL] - Menu (In-game)\n[F4] - Fullscreen\n[Hold ESC] - Quit\nWhen HP is 0, you lose.",
+    "menu.begin": "Begin Game",
+    "menu.settings": "Settings",
+    "menu.continue": "Continue",
+    "menu.reset": "Reset",
+    "menu.reset.true": "True Reset",
+
+    "menu.naming.title": "Name the fallen human.",
+    "menu.naming.quit": "Quit",
+    "menu.naming.backspace": "Backspace",
+    "menu.naming.done": "Done",
+
+    "menu.yes": "Yes",
+    "menu.no": "No",
+
+    "menu.confirm.title": "Is this name correct?",
+    "menu.confirm.title.reset": "A name has already\nbeen chosen.",
+    "menu.confirm.title.aaaaaa": "Not very creative...?",
+    "menu.confirm.title.alphys": "D-don't do that.",
+    "menu.confirm.title.alphy": "Uh.... OK?",
+    "menu.confirm.title.asgore": "You cannot.",
+    "menu.confirm.title.toriel": "I think you should\nthink of your own\nname, my child.",
+    "menu.confirm.title.asriel": "...",
+    "menu.confirm.title.flowey": "I already CHOSE\nthat name.",
+    "menu.confirm.title.sans": "nope.",
+    "menu.confirm.title.papyru": "I'LL ALLOW IT!!!!",
+    "menu.confirm.title.undyne": "Get your OWN name!",
+    "menu.confirm.title.mtt": "OOOOH!!! ARE YOU\nPROMOTING MY BRAND?",
+    "menu.confirm.title.chara": "The true name."
+}
