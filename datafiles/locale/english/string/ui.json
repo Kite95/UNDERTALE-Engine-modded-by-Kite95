@@ -5,7 +5,7 @@
     "ui.menu.item.drop": "DROP",
 
     "ui.menu.stat": "STAT",
-    "ui.menu.stat.0": "\"{insert NAME}\"{space_y -1}\n\n{space_y 0}LV  {insert LV}\nHP  {insert HP} / {insert HP_MAX}\n\nAT  {insert ATK} ({insert ATK_ITEM})\nDF  {insert DEF} ({insert DEF_ITEM}){space_y -1}\n\n{space_y 0}WEAPON: {insert WEAPON}\nARMOR: {insert ARMOR}{space_y 4}\n{space_y 0}GOLD: {insert GOLD}",
+    "ui.menu.stat.0": "\"{insert NAME}\"{space_y -1}\n\n{space_y 0}LV {insert LV}\nHP {insert HP} / {insert HP_MAX}\n\nAT {insert ATK} ({insert ATK_ITEM})\nDF {insert DEF} ({insert DEF_ITEM}){space_y -1}\n\n{space_y 0}WEAPON: {insert WEAPON}\nARMOR: {insert ARMOR}{space_y 4}\n{space_y 0}GOLD: {insert GOLD}",
     "ui.menu.stat.1": "EXP: {insert EXP}\nNEXT: {insert EXP_NEXT}",
     "ui.menu.stat.2": "{space_y -1}\n\n{space_y 0}\n{space_y 4}\n{space_y 0}KILLS: {insert KILLS}",
 
@@ -15,7 +15,11 @@
     "ui.save.save": "Save",
     "ui.save.return": "Return",
     "ui.save.saved": "File Saved.",
-    
+    "ui.save.current": "CURRENT",
+    "ui.save.file": "FILE {insert SLOT}",
+    "ui.save.new_file": "NEW FILE",
+    "ui.save.overwrite_query": "Overwrite File {insert SLOT}?",
+
     "ui.box.inventory": "INVENTORY",
     "ui.box.box": "BOX",
     "ui.box.finish": "Press [X] to finish"

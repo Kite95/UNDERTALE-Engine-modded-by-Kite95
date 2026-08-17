@@ -2,7 +2,7 @@ Anim_Step();
 BGM_Step();
 Cutscene_Step();
 
-if(_time>=60){
+if(_time>=30){
 	var z=Storage_GetStaticGeneral();
 	var time=z.Get(FLAG_STATIC_TIME,0);
 	z.Set(FLAG_STATIC_TIME,time+1);

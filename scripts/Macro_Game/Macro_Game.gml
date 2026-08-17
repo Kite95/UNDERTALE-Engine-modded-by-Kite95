@@ -15,4 +15,12 @@ function Macro_Game() {
 	//true: indented JSON save files; false: compact single-line
 #macro GAME_SAVE_INDENT true
 
+	// SAVE_MODE.SINGLE = one slot (file0); SAVE_MODE.TRIPLE = pick slot at save point
+#macro GAME_SAVE_DEFAULT SAVE_MODE.TRIPLE
+
+	enum SAVE_MODE{
+		SINGLE,
+		TRIPLE,
+	};
+
 }

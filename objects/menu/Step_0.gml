@@ -41,7 +41,7 @@ if(_menu==0){
 			}
 		}else if(Input_IsPressed(INPUT.CONFIRM)){
 			if(_choice==0){
-				Storage_LoadGame();
+				Storage_Load(Storage_GetSlot());
 				var roomName=Storage_GetStaticGeneral().Get(FLAG_STATIC_ROOM,"");
 				var roomIndex=asset_get_index(roomName);
 				if(!room_exists(roomIndex)){
