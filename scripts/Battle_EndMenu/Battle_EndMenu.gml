@@ -65,7 +65,7 @@ function Battle_EndMenu() {
 					Player_SetGold(Player_GetGold()+Battle_GetRewardGold());
 					if(Player_UpdateLv()){
 						//text+="\n"+Lang_GetString("battle.result.lv_up");
-						audio_play_sound(snd_level_up,0,false);
+						SFX_Play(snd_level_up,0,false);
 					}
 				}
 				Battle_SetDialog(text,true);

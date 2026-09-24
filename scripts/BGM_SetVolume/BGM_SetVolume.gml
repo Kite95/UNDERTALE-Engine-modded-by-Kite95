@@ -11,10 +11,11 @@ function BGM_SetVolume() {
 
 	if(BGM_IsSlotValid(SLOT)&&VOLUME>=0){
 		if(BGM_IsPlaying(SLOT)){
+			var GAIN=VOLUME*BGM_GetGain();
 			if(TIME>0){
-				audio_sound_gain(BGM_GetID(SLOT),VOLUME,TIME);
+				audio_sound_gain(BGM_GetID(SLOT),GAIN,TIME);
 			}else{
-				audio_sound_gain(BGM_GetID(SLOT),VOLUME,0);
+				audio_sound_gain(BGM_GetID(SLOT),GAIN,0);
 			}
 			return true;
 		}else{

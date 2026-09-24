@@ -2,13 +2,15 @@
 var is_mini=variable_instance_exists(id,"_is_mini")&&_is_mini;
 var clearing=variable_instance_exists(id,"_clearing")&&_clearing;
 if(!clearing&&!is_mini){
-	TriggerCallback(1);
+	Typer_Callback(1);
 }
-Voice_StopLoop();
+Typer_VoiceStop();
 _char_x=_align_offset_x;
 _char_y=_align_offset_y;
 _line=0;
 _line_char_count=0;
+width=0;
+height=0;
 
 if(variable_instance_exists(id,"_list_inst")&&ds_exists(_list_inst,ds_type_list)){
 	var proc=0;
@@ -34,8 +36,12 @@ if(!is_mini&&variable_instance_exists(id,"_list_mini")&&ds_exists(_list_mini,ds_
 	ds_list_clear(_list_mini);
 }
 
+if(!is_mini){
+	Typer_ChoiceDestroyChildren();
+}
+
 if(!clearing&&!is_mini){
 	_segment_index+=1;
 	_callback_end_done=false;
-	TriggerCallback(0);
+	Typer_Callback(0);
 }

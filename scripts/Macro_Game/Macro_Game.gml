@@ -23,4 +23,7 @@ function Macro_Game() {
 		TRIPLE,
 	};
 
+	// true: treat Windows as mobile (touch overlay + official langs only)
+#macro GAME_MOBILE_PREVIEW false
+
 }

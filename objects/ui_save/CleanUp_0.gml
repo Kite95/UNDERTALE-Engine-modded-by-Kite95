@@ -1,9 +1,71 @@
+if(instance_exists(_inst_name)){
+	instance_destroy(_inst_name);
+}
+if(instance_exists(_inst_lv)){
+	instance_destroy(_inst_lv);
+}
+if(instance_exists(_inst_time)){
+	instance_destroy(_inst_time);
+}
+if(instance_exists(_inst_room)){
+	instance_destroy(_inst_room);
+}
+if(instance_exists(_inst_save)){
+	instance_destroy(_inst_save);
+}
+if(instance_exists(_inst_return)){
+	instance_destroy(_inst_return);
+}
+if(instance_exists(_inst_overwrite_return)){
+	instance_destroy(_inst_overwrite_return);
+}
+
 var i=0;
-repeat(array_length(_insts)){
-	if(instance_exists(_insts[i])){
-		instance_destroy(_insts[i]);
+repeat(3){
+	if(instance_exists(_inst_slot[i])){
+		instance_destroy(_inst_slot[i]);
+	}
+	if(instance_exists(_inst_slot_lv[i])){
+		instance_destroy(_inst_slot_lv[i]);
+	}
+	if(instance_exists(_inst_slot_name[i])){
+		instance_destroy(_inst_slot_name[i]);
+	}
+	if(instance_exists(_inst_slot_time[i])){
+		instance_destroy(_inst_slot_time[i]);
+	}
+	if(instance_exists(_inst_slot_room[i])){
+		instance_destroy(_inst_slot_room[i]);
 	}
 	i+=1;
+}
+
+if(instance_exists(_inst_overwrite)){
+	instance_destroy(_inst_overwrite);
+}
+if(instance_exists(_inst_old_lv)){
+	instance_destroy(_inst_old_lv);
+}
+if(instance_exists(_inst_old_name)){
+	instance_destroy(_inst_old_name);
+}
+if(instance_exists(_inst_old_time)){
+	instance_destroy(_inst_old_time);
+}
+if(instance_exists(_inst_old_room)){
+	instance_destroy(_inst_old_room);
+}
+if(instance_exists(_inst_new_lv)){
+	instance_destroy(_inst_new_lv);
+}
+if(instance_exists(_inst_new_name)){
+	instance_destroy(_inst_new_name);
+}
+if(instance_exists(_inst_new_time)){
+	instance_destroy(_inst_new_time);
+}
+if(instance_exists(_inst_new_room)){
+	instance_destroy(_inst_new_room);
 }
 
 if(instance_exists(char_player)){

@@ -1,4 +1,4 @@
-Storage_SetSlot(0);
+Storage_SetSlot(_slot_choice);
 Storage_GetStatic().ClearData();
 var sDynamic=Storage_GetDynamic();
 sDynamic.ClearData();

@@ -34,6 +34,9 @@ instance_create_depth(0,0,0,fader);
 instance_create_depth(0,0,0,border);
 instance_create_depth(0,0,0,closed_captions);
 instance_create_depth(0,0,0,debugger);
+if(Game_IsMobile()){
+	instance_create_depth(0,0,0,mobile);
+}
 
 application_surface_draw_enable(false);
 

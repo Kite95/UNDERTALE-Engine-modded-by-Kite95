@@ -69,6 +69,6 @@
   "nineSlice": null,
   "parent": {
     "name": "Small",
-    "path": "folders/Sprites/Gamepad/PS4/Small.yy",
+    "path": "folders/Sprites/Gamepad/Console/PS4/Small.yy",
   },
 }

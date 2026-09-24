@@ -137,7 +137,7 @@ if(Battle_GetState()==BATTLE_STATE.IN_TURN && moveable){
 			jump_state = 0;
 			move = 0;
 			if(impact = 1){
-				audio_play_sound(snd_dong,0,0);
+				SFX_Play(snd_dong,0,0);
 				Camera_Shake(8,8,1,1,1,1);
 				impact = 0;
 			}
@@ -147,7 +147,7 @@ if(Battle_GetState()==BATTLE_STATE.IN_TURN && moveable){
 			jump_state = 0;
 			move = 1;
 			if(impact = 1){
-				audio_play_sound(snd_dong,0,0);
+				SFX_Play(snd_dong,0,0);
 				Camera_Shake(8,8,1,1,1,1);
 				impact = 0;
 			}
@@ -158,7 +158,7 @@ if(Battle_GetState()==BATTLE_STATE.IN_TURN && moveable){
 			jump_state = 0;
 			move = 0;
 			if(impact = 1){
-				audio_play_sound(snd_dong,0,0);
+				SFX_Play(snd_dong,0,0);
 				Camera_Shake(8,8,1,1,1,1);
 				impact = 0;
 			}

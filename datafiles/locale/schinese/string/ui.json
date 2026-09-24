@@ -15,10 +15,8 @@
     "ui.save.save": "保存",
     "ui.save.return": "返回",
     "ui.save.saved": "档案已保存。",
-    "ui.save.current": "当前存档",
-    "ui.save.file": "存档{insert SLOT}",
-    "ui.save.new_file": "新存档",
-    "ui.save.overwrite_query": "覆盖档案 {insert SLOT}？",
+    "ui.save.new": "新存档",
+    "ui.save.overwrite": "覆盖档案 {insert SLOT}？",
 
     "ui.box.inventory": "物品栏",
     "ui.box.box": "箱子",

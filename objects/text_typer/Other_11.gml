@@ -1,5 +1,5 @@
 ///@desc New Line
-if(_per_line_align&&_halign==1){
+if(_per_line_align){
 	_char_x=0;
 }else{
 	_char_x=_align_offset_x;
@@ -11,6 +11,7 @@ _char_y+=(string_height(" ")+_group_font_space_y[_font]+_space_y)*_group_font_sc
 _line+=1;
 _line_char_count=0;
 
-if(height<_char_y){
-	height=_char_y;
+var h=_char_y-_align_offset_y;
+if(height<h){
+	height=h;
 }

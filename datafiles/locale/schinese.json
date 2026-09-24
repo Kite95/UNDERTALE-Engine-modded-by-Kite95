@@ -19,6 +19,14 @@
       "dialog_shop": 1
     }
   },
+  "strings": [
+    "string/menu.json",
+    "string/ui.json",
+    "string/item.json",
+    "string/battle.json",
+    "string/settings.json",
+    "string/shop.json"
+  ],
   "fonts": [
     "determination_mono",
     "determination_sans",
@@ -29,17 +37,17 @@
   "typer": {
     "dialog": {
       "ascii": { "font": "determination_mono", "scale": 1, "space_x": 0 },
-      "other": { "font": "simsun_main", "scale": 1, "space_x": 3 },
+      "other": { "font": "simsun_main", "scale": 1, "space_x": 3, "characters": { "offsets_y_default": [1, 0]} },
       "space_y": 0
     },
     "menu": {
       "ascii": { "font": "determination_sans", "scale": 1, "space_x": 0 },
-      "other": { "font": "simsun_main", "scale": 1, "space_x": 3 },
+      "other": { "font": "simsun_main", "scale": 1, "space_x": 3, "characters": { "offsets_y_default": [1, 0]} },
       "space_y": 0
     },
     "battle": {
       "ascii": { "font": "dotumche", "scale": 1, "space_x": 0 },
-      "other": { "font": "simsun_battle", "scale": 1, "space_x": 3 },
+      "other": { "font": "simsun_battle", "scale": 1, "space_x": 3, "characters": { "offsets_y_default": [1, 0]} },
       "space_y": 0
     }
   },

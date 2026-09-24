@@ -1,6 +1,6 @@
 {
   "info": {
-    "name": "English",
+    "name": "ENGLISH",
     "ascii_name": "english",
     "order": 0
   },
@@ -61,6 +61,14 @@
       "dialog_shop": 0
     }
   },
+  "strings": [
+    "string/menu.json",
+    "string/ui.json",
+    "string/item.json",
+    "string/battle.json",
+    "string/settings.json",
+    "string/shop.json"
+  ],
   "fonts": [
     "dotumche",
     "determination_mono",

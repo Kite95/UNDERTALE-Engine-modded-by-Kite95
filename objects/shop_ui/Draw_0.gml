@@ -27,24 +27,24 @@ if(!(is_dialog||Shop_GetMenu()==SHOP_MENU.SELL||Shop_GetMenuSell()==SHOP_SELL.CO
 
 if(Shop_GetState()==SHOP_STATE.MENU){
 	if(Shop_GetMenu()==SHOP_MENU.MENU){
-		var Y=276+shop._menu_choice*40;
-		draw_sprite(spr_battle_soul_red,0,459,Y);
+		var Y=278+shop._menu_choice*40;
+		draw_sprite_ext(spr_soul_small,0,460,Y,2,2,0,c_white,1);
 	}
 	if(Shop_GetMenu()==SHOP_MENU.BUY&&Shop_GetMenuBuy()==SHOP_BUY.MENU){
-		var Yb=276+shop._buy_choice*40;
-		draw_sprite(spr_battle_soul_red,0,38,Yb);
+		var Yb=278+shop._buy_choice*40;
+		draw_sprite_ext(spr_soul_small,0,38,Yb,2,2,0,c_white,1);
 	}
 	if(Shop_GetMenu()==SHOP_MENU.SELL&&Shop_GetMenuSell()==SHOP_SELL.MENU){
 		var Xs=38+(shop._sell_choice mod 2)*281;
-		var Ys=276+(shop._sell_choice div 2)*40;
+		var Ys=278+(shop._sell_choice div 2)*40;
 		if(shop._sell_choice==8){
 			Xs=38;
-			Ys=276+4*40;
+			Ys=278+4*40;
 		}
-		draw_sprite(spr_battle_soul_red,0,Xs,Ys);
+		draw_sprite_ext(spr_soul_small,0,Xs,Ys,2,2,0,c_white,1);
 	}
 	if(Shop_GetMenu()==SHOP_MENU.TALK){
-		var Yt=276+shop._talk_choice*40;
-		draw_sprite(spr_battle_soul_red,0,38,Yt);
+		var Yt=278+shop._talk_choice*40;
+		draw_sprite_ext(spr_soul_small,0,38,Yt,2,2,0,c_white,1);
 	}
 }

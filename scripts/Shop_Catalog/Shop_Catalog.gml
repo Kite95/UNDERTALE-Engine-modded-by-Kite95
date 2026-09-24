@@ -394,7 +394,7 @@ function Shop_TryBuy(index){
 		}
 		Shop_SaveBuyStock(index);
 	}
-	audio_play_sound(snd_item_equip,0,false);
+	SFX_Play(snd_item_equip,0,false);
 	return SHOP_BUY_RESULT.YES;
 }
 
@@ -409,6 +409,6 @@ function Shop_TrySell(slot){
 	Player_SetGold(Player_GetGold()+price);
 	inv.Remove(slot);
 	if(instance_exists(shop))shop._sell_thanks+=1;
-	audio_play_sound(snd_item_equip,0,false);
+	SFX_Play(snd_item_equip,0,false);
 	return SHOP_SELL_RESULT.YES;
 }

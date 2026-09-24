@@ -15,10 +15,8 @@
     "ui.save.save": "Save",
     "ui.save.return": "Return",
     "ui.save.saved": "File Saved.",
-    "ui.save.current": "CURRENT",
-    "ui.save.file": "FILE {insert SLOT}",
-    "ui.save.new_file": "NEW FILE",
-    "ui.save.overwrite_query": "Overwrite File {insert SLOT}?",
+    "ui.save.new": "NEW FILE",
+    "ui.save.overwrite": "Overwrite File {insert SLOT}?",
 
     "ui.box.inventory": "INVENTORY",
     "ui.box.box": "BOX",

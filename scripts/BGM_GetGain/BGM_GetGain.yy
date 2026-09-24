@@ -1,0 +1,11 @@
+{
+  "resourceType": "GMScript",
+  "resourceVersion": "1.0",
+  "name": "BGM_GetGain",
+  "isDnD": false,
+  "isCompatibility": false,
+  "parent": {
+    "name": "BGM",
+    "path": "folders/Scripts/Audio/BGM.yy",
+  },
+}

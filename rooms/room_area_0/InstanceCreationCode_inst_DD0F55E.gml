@@ -44,7 +44,7 @@ _cutscene_code=function(){
 	cutscene_fade(0.45,0,12,c_white);
 	cutscene_dialog("* fade (white).");
 
-	cutscene_choice("* Choice (4-way, none).{pause}{clear}{choice_anim true}{choice_dir 3}            {choice 0}我是你爹!\n  {choice 1}你是我爹吗              {choice 2}蛤蛤\n            {choice 3}弱弱？！！？",function(c){
+	cutscene_choice("* Choice (compass, center).{pause}{clear}{voice -1}{instant true}{choice_default -1}{choice_anim true}{choice_dir 3}{choice 0}你是我爹吗{choice 1}蛤蛤823",function(c){
 		if(c==0){
 			cutscene_dialog("* Picked A.");
 			cutscene_char_move_to(char_player,char_player.x,char_player.y+20,20);
@@ -52,11 +52,14 @@ _cutscene_code=function(){
 			cutscene_dialog("* Picked B.");
 			cutscene_wait(20);
 		}
-		if(instance_exists(char_save)){
-			cutscene_set_variable(char_save,"dir",DIR_CHAR.DOWN);
-		}
-		cutscene_dialog("* Demo complete.");
-		cutscene_player_canmove(true);
+		cutscene_choice("* Choice (grid, center).{pause}{clear}{voice -1}{instant true}{choice_default -1}{choice_anim true}{choice_dir 2}{choice 0}左上              {choice 1}右上\n{choice 2}左下              {choice 3}右下",function(g){
+			cutscene_dialog("* Picked grid "+string(g)+".");
+			if(instance_exists(char_save)){
+				cutscene_set_variable(char_save,"dir",DIR_CHAR.DOWN);
+			}
+			cutscene_dialog("* Demo complete.");
+			cutscene_player_canmove(true);
+		});
 	});
 
 	cutscene_play();

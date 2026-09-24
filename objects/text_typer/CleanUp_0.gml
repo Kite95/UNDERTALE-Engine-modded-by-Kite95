@@ -1,6 +1,6 @@
 text="";
 
-Voice_StopLoop();
+Typer_VoiceStop();
 
 if(variable_instance_exists(id,"_list_inst")&&ds_exists(_list_inst,ds_type_list)){
 	var proc=0;
@@ -33,4 +33,9 @@ if(variable_instance_exists(id,"_list_mini")&&ds_exists(_list_mini,ds_type_list)
 		mi+=1;
 	}
 	ds_list_destroy(_list_mini);
+}
+
+if(variable_instance_exists(id,"_list_choice")&&ds_exists(_list_choice,ds_type_list)){
+	Typer_ChoiceDestroyChildren();
+	ds_list_destroy(_list_choice);
 }

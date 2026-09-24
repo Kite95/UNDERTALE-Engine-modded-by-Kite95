@@ -1,1 +1,1 @@
-text="* Test ss6"
+text="{font 3}* 中文fonts中文测试。"

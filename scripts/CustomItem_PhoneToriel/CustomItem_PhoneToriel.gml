@@ -6,7 +6,7 @@ function CustomItem_Phone_TML() : ItemType() constructor{
 	}
 	
 	function OnUse(inventory,index){
-		audio_play_sound(snd_phone_call,0,false);
+		SFX_Play(snd_phone_call,0,false);
 		Dialog_Add("* Dialing...");
 		
 		// You can check what room it currently is, and display different dialogs.

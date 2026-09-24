@@ -80,6 +80,46 @@ function Storage_Load(slot){
 	Storage_LoadGame();
 }
 
+function Storage_CopySlot(from,to){
+	if(from==to||from<0||to<0){
+		return false;
+	}
+	if(!Storage_SlotExists(from)){
+		return false;
+	}
+	var dest_dir=GAME_SAVE_NAME+"/file"+string(to);
+	if(!directory_exists(dest_dir)){
+		directory_create(dest_dir);
+	}
+	var names=["info.json","static.json","dynamic.json"];
+	var i=0;
+	repeat(3){
+		var src=Storage_GetSlotFilePath(from,names[i]);
+		var dst=Storage_GetSlotFilePath(to,names[i]);
+		if(file_exists(dst)){
+			file_delete(dst);
+		}
+		if(file_exists(src)){
+			file_copy(src,dst);
+		}
+		i+=1;
+	}
+	return true;
+}
+
+function Storage_EraseSlot(slot){
+	var names=["info.json","static.json","dynamic.json"];
+	var i=0;
+	repeat(3){
+		var path=Storage_GetSlotFilePath(slot,names[i]);
+		if(file_exists(path)){
+			file_delete(path);
+		}
+		i+=1;
+	}
+	return true;
+}
+
 /// Title menu slot select (hook for future menu UI).
 function Storage_MenuSlot(slot){
 	Storage_SetSlot(slot);

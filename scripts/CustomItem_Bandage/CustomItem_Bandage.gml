@@ -7,7 +7,7 @@ function CustomItem_Bandage() : ItemTypeSimple("bandage") constructor{
 		Dialog_Start();
 
 		Player_Heal(10);
-		audio_play_sound(snd_item_heal,0,false);
+		SFX_Play(snd_item_heal,0,false);
 
 		inventory.Remove(index);
 	}

@@ -18,33 +18,39 @@ function Lang_LoadLanguage() {
 	var OK=false;
 
 	var MAP=global._gmu_lang_string;
-	var STRING_DIR=BASE+"string/";
-	if(directory_exists(STRING_DIR)){
-		// Collect names first — do not open files while file_find is active.
-		var STRING_FILES=[];
-		var FILE=file_find_first(STRING_DIR+"*.json",0);
-		while(FILE!=""){
-			array_push(STRING_FILES,FILE);
-			FILE=file_find_next();
+	var STRING_FILES=[];
+	var LISTED=MANIFEST[$ "strings"];
+	if(is_array(LISTED)){
+		for(var li=0;li<array_length(LISTED);li+=1){
+			array_push(STRING_FILES,LISTED[li]);
 		}
-		file_find_close();
+	}else if(!Game_IsMobile()){
+		var STRING_DIR=BASE+"string/";
+		if(directory_exists(STRING_DIR)){
+			var FILE=file_find_first(STRING_DIR+"*.json",0);
+			while(FILE!=""){
+				array_push(STRING_FILES,"string/"+FILE);
+				FILE=file_find_next();
+			}
+			file_find_close();
+		}
+	}
 
-		for(var si=0;si<array_length(STRING_FILES);si+=1){
-			var PATH=STRING_DIR+STRING_FILES[si];
-			if(file_exists(PATH)){
-				var STR=Lang_LoadFileToString(PATH);
-				var obj=json_parse(STR);
-				if(is_struct(obj)){
-					var names=variable_struct_get_names(obj);
-					for(var k=0;k<array_length(names);k+=1){
-						var skey=names[k];
-						var innerLine=obj[$ skey];
-						if(is_string(innerLine)){
-							ds_map_set(MAP,skey,innerLine);
-						}
+	for(var si=0;si<array_length(STRING_FILES);si+=1){
+		var PATH=BASE+STRING_FILES[si];
+		if(file_exists(PATH)){
+			var STR=Lang_LoadFileToString(PATH);
+			var obj=json_parse(STR);
+			if(is_struct(obj)){
+				var names=variable_struct_get_names(obj);
+				for(var k=0;k<array_length(names);k+=1){
+					var skey=names[k];
+					var innerLine=obj[$ skey];
+					if(is_string(innerLine)){
+						ds_map_set(MAP,skey,innerLine);
 					}
-					OK=true;
 				}
+				OK=true;
 			}
 		}
 	}
@@ -160,7 +166,7 @@ function Lang_LoadLanguage() {
 
 			var FONT=-1;
 			if(!is_sprite){
-				var font_path=GMU_LANG_PATH_FONT+fsrc;
+				var font_path=global._gmu_included_root+"font/"+fsrc;
 				if(file_exists(font_path)){
 					FONT=font_add(font_path,size,bold,italic,first,last);
 				}
@@ -216,7 +222,7 @@ function Lang_LoadLanguage() {
 	}
 
 	var AUDIO_DIR=BASE+"audio/";
-	if(directory_exists(AUDIO_DIR)){
+	if(!Game_IsMobile()&&directory_exists(AUDIO_DIR)){
 		var AUDIO_FILES=[];
 		var AFILE=file_find_first(AUDIO_DIR+"*.ogg",0);
 		while(AFILE!=""){

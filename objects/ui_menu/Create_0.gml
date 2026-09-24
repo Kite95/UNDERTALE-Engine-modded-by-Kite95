@@ -33,4 +33,4 @@ var hasItem=Item_GetInventoryItems().GetCount() > 0;
 var hasPhone=Item_GetInventoryPhones().GetCount() > 0;
 _inst_menu.text=_prefix+"{space_y 2}"+(!hasItem ? "{color_text `gray`}" : "")+Lang_GetString("ui.menu.item")+(!hasItem ? "{color_text `white`}" : "")+"\n"+Lang_GetString("ui.menu.stat")+(hasPhone ? "\n"+Lang_GetString("ui.menu.phone") : "");
 
-audio_play_sound(snd_menu_switch,0,false);
+SFX_Play(snd_menu_switch,0,false);

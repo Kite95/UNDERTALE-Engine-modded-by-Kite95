@@ -29,5 +29,5 @@ if(_state==0){
 		}
 	}
 	
-	draw_sprite(spr_battle_soul_red,0,16+6+27+302*_choice_mode,16+6+69+32*_choice_item);
+	draw_sprite_ext(spr_soul_small,0,16+6+27+302*_choice_mode,16+6+69+32*_choice_item,2,2,0,c_white,1);
 }

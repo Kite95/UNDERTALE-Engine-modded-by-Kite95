@@ -16,7 +16,7 @@ _inst_finish=noone;
 var sound=snd_weapon_equip;
 if(audio_exists(sound)){
 	audio_stop_sound(sound);
-	audio_play_sound(sound,0,false);
+	SFX_Play(sound,0,false);
 }
 
 if(instance_exists(char_player)){

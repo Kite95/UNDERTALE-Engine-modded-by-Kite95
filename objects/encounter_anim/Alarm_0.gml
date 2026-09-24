@@ -5,7 +5,7 @@ if(Encounter_IsExists(_encounter)&&instance_exists(char_player)){
 		inst.y=char_player.y-char_player.sprite_height;
 		var time=20+irandom(5);
 		inst.time=time;
-		audio_play_sound(snd_exclamation,0,false);
+		SFX_Play(snd_exclamation,0,false);
 		alarm[1]=time;
 	}else{
 		alarm[1]=1;

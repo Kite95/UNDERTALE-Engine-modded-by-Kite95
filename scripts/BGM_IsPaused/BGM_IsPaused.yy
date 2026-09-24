@@ -6,6 +6,6 @@
   "isCompatibility": false,
   "parent": {
     "name": "BGM",
-    "path": "folders/Scripts/BGM.yy",
+    "path": "folders/Scripts/Audio/BGM.yy",
   },
 }

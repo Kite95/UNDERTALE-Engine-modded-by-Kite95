@@ -1,7 +1,100 @@
 ///@desc Menu Switch
 if(_menu==0){
+	if(instance_exists(_inst_instruction)){
+		instance_destroy(_inst_instruction);
+	}
+	if(instance_exists(_inst_begin)){
+		instance_destroy(_inst_begin);
+	}
+	if(instance_exists(_inst_settings)){
+		instance_destroy(_inst_settings);
+	}
+	if(instance_exists(_inst_name)){
+		instance_destroy(_inst_name);
+	}
+	if(instance_exists(_inst_lv)){
+		instance_destroy(_inst_lv);
+	}
+	if(instance_exists(_inst_time)){
+		instance_destroy(_inst_time);
+	}
+	if(instance_exists(_inst_room)){
+		instance_destroy(_inst_room);
+	}
+	if(instance_exists(_inst_continue)){
+		instance_destroy(_inst_continue);
+	}
+	if(instance_exists(_inst_reset)){
+		instance_destroy(_inst_reset);
+	}
+	if(instance_exists(_inst_title)){
+		instance_destroy(_inst_title);
+	}
+	if(instance_exists(_inst_copy)){
+		instance_destroy(_inst_copy);
+	}
+	if(instance_exists(_inst_erase)){
+		instance_destroy(_inst_erase);
+	}
+	if(instance_exists(_inst_slot_continue)){
+		instance_destroy(_inst_slot_continue);
+	}
+	if(instance_exists(_inst_slot_reset)){
+		instance_destroy(_inst_slot_reset);
+	}
+	var i=0;
+	repeat(3){
+		if(instance_exists(_inst_slot_name[i])){
+			instance_destroy(_inst_slot_name[i]);
+		}
+		if(instance_exists(_inst_slot_lv[i])){
+			instance_destroy(_inst_slot_lv[i]);
+		}
+		if(instance_exists(_inst_slot_time[i])){
+			instance_destroy(_inst_slot_time[i]);
+		}
+		if(instance_exists(_inst_slot_room[i])){
+			instance_destroy(_inst_slot_room[i]);
+		}
+		_inst_slot_name[i]=noone;
+		_inst_slot_lv[i]=noone;
+		_inst_slot_time[i]=noone;
+		_inst_slot_room[i]=noone;
+		i+=1;
+	}
+	_inst_instruction=noone;
+	_inst_begin=noone;
+	_inst_settings=noone;
+	_inst_name=noone;
+	_inst_lv=noone;
+	_inst_time=noone;
+	_inst_room=noone;
+	_inst_continue=noone;
+	_inst_reset=noone;
+	_inst_title=noone;
+	_inst_copy=noone;
+	_inst_erase=noone;
+	_inst_slot_continue=noone;
+	_inst_slot_reset=noone;
+	
 	var s=Storage_GetInfo();
-	_mode=s.IsFileExists()?1:0;
+	var has_file=false;
+	_slot_open=false;
+	_choice_file=0;
+	_file_action=0;
+	_copy_from=-1;
+	_copy_to=-1;
+	_erase_slot=-1;
+	_hint_timer=0;
+	_hint_title="";
+	if(Storage_GetSaveMode()==SAVE_MODE.TRIPLE){
+		if(Storage_SlotExists(0)||Storage_SlotExists(1)||Storage_SlotExists(2)){
+			has_file=true;
+		}
+		_mode=(has_file ? 2 : 0);
+	}else{
+		_mode=s.IsFileExists()?1:0;
+	}
 	if(_mode==0){
 		_inst_instruction=instance_create_depth(170,40,0,text_typer);
 		_inst_instruction.text=_prefix+Lang_GetString("menu.instruction");
@@ -13,7 +106,7 @@ if(_menu==0){
 			event_user(15);
 		}
 		event_user(2);
-	}else{
+	}else if(_mode==1){
 		s.ClearData();
 		s.LoadFromFile();
 		var z=Storage_GetInfoGeneral();
@@ -39,7 +132,64 @@ if(_menu==0){
 		_inst_settings.text=_prefix+Lang_GetString("menu.settings");
 		_inst_settings.override_color_text_enabled=true;
 		event_user(2);
+	}else{
+		if(_choice_restore>=0&&_choice_restore<=2){
+			_choice=_choice_restore;
+		}else{
+			_choice=0;
+		}
+		_choice_restore=-1;
+		_inst_title=instance_create_depth(80,55,0,text_typer);
+		_inst_title.text=_prefix_outline+Lang_GetString("menu.file_select","File Select");
 		
+		var i=0;
+		var peek=-1;
+		var minute=0;
+		var second=0;
+		repeat(3){
+			_slot_peek[i]=-1;
+			if(Storage_SlotExists(i)){
+				_slot_peek[i]=Storage_PeekSlot(i);
+			}
+			peek=_slot_peek[i];
+			if(!is_struct(peek)){
+				_inst_slot_name[i]=instance_create_depth(160,105+i*92,0,text_typer);
+				_inst_slot_name[i].text=_prefix+Lang_GetString("menu.file.empty","[EMPTY]");
+				_inst_slot_lv[i]=instance_create_depth(280,105+i*92,0,text_typer);
+				_inst_slot_lv[i].text=""
+				_inst_slot_time[i]=instance_create_depth(408,105+i*92,0,text_typer);
+				_inst_slot_time[i].text=_prefix+Lang_GetString("menu.file.time.empty","--:--");
+				_inst_slot_room[i]=instance_create_depth(160,139+i*92,0,text_typer);
+				_inst_slot_room[i].text=_prefix+Lang_GetString("menu.file.room.empty","---------");
+			}else{
+				minute=floor(peek.time/60);
+				second=peek.time%60;
+				_inst_slot_name[i]=instance_create_depth(160,105+i*92,0,text_typer);
+				_inst_slot_name[i].text=_prefix+string(peek.name);
+				_inst_slot_lv[i]=instance_create_depth(280,105+i*92,0,text_typer);
+				_inst_slot_lv[i].text=_prefix+"LV "+string(peek.lv);
+				_inst_slot_time[i]=instance_create_depth(408,105+i*92,0,text_typer);
+				_inst_slot_time[i].text=_prefix+string(minute)+":"+(second<10 ? "0" : "")+string(second);
+				_inst_slot_room[i]=instance_create_depth(160,139+i*92,0,text_typer);
+				_inst_slot_room[i].text=_prefix+Player_GetRoomName(asset_get_index(peek.room));
+			}
+			_inst_slot_name[i].override_color_text_enabled=true;
+			_inst_slot_lv[i].override_color_text_enabled=true;
+			_inst_slot_time[i].override_color_text_enabled=true;
+			_inst_slot_room[i].override_color_text_enabled=true;
+			i+=1;
+		}
+		
+		_inst_copy=instance_create_depth(108,373,0,text_typer);
+		_inst_copy.text=_prefix_outline+Lang_GetString("menu.copy","Copy");
+		_inst_copy.override_color_text_enabled=true;
+		_inst_erase=instance_create_depth(226,373,0,text_typer);
+		_inst_erase.text=_prefix_outline+Lang_GetString("menu.erase","Erase");
+		_inst_erase.override_color_text_enabled=true;
+		_inst_settings=instance_create_depth(531,373,0,text_typer);
+		_inst_settings.text=_prefix_outline+"{halign 2}"+Lang_GetString("menu.settings");
+		_inst_settings.override_color_text_enabled=true;
+		event_user(2);
 	}
 }else{
 	if(instance_exists(_inst_instruction)){
@@ -69,6 +219,46 @@ if(_menu==0){
 	if(instance_exists(_inst_reset)){
 		instance_destroy(_inst_reset);
 	}
+	if(instance_exists(_inst_title)){
+		instance_destroy(_inst_title);
+	}
+	if(instance_exists(_inst_copy)){
+		instance_destroy(_inst_copy);
+	}
+	if(instance_exists(_inst_erase)){
+		instance_destroy(_inst_erase);
+	}
+	if(instance_exists(_inst_slot_continue)){
+		instance_destroy(_inst_slot_continue);
+	}
+	if(instance_exists(_inst_slot_reset)){
+		instance_destroy(_inst_slot_reset);
+	}
+	var i=0;
+	repeat(3){
+		if(instance_exists(_inst_slot_name[i])){
+			instance_destroy(_inst_slot_name[i]);
+		}
+		if(instance_exists(_inst_slot_lv[i])){
+			instance_destroy(_inst_slot_lv[i]);
+		}
+		if(instance_exists(_inst_slot_time[i])){
+			instance_destroy(_inst_slot_time[i]);
+		}
+		if(instance_exists(_inst_slot_room[i])){
+			instance_destroy(_inst_slot_room[i]);
+		}
+		_inst_slot_name[i]=noone;
+		_inst_slot_lv[i]=noone;
+		_inst_slot_time[i]=noone;
+		_inst_slot_room[i]=noone;
+		i+=1;
+	}
+	_inst_title=noone;
+	_inst_copy=noone;
+	_inst_erase=noone;
+	_inst_slot_continue=noone;
+	_inst_slot_reset=noone;
 }
 
 if(_menu==1){
@@ -143,6 +333,6 @@ if(_menu==3){
 	BGM_Stop(0);
 	fader.color=c_white;
 	Fader_Fade(-1,1,160);
-	audio_play_sound(snd_cymbal,0,false);
+	SFX_Play(snd_cymbal,0,false);
 	alarm[0]=175;
 }

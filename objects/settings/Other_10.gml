@@ -1,5 +1,5 @@
 ///@desc Settings
-_inst_title=instance_create_depth(160,10,0,text_typer);
+_inst_title=instance_create_depth(208,20,0,text_typer);
 _inst_title.text=_prefix+Lang_GetString("settings.title");
 _inst_exit=instance_create_depth(40,80,0,text_typer);
 _inst_exit.text=_prefix+Lang_GetString("settings.exit");

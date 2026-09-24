@@ -459,3 +459,94 @@ function cutscene_fade(){
 		));
 	}
 }
+
+///@arg encounter_id
+///@arg anim*       (default true)
+///@arg exclamation* (default true)
+function cutscene_encounter(){
+	var encounter=argument[0];
+	var anim=true;
+	var exclam=true;
+	if(argument_count>1)anim=argument[1];
+	if(argument_count>2)exclam=argument[2];
+
+	cutscene_queue_event(global.current_cutscene,cutscene_make_event(
+		method({encounter:encounter,anim:anim,exclam:exclam},function(){
+			Encounter_Start(encounter,anim,exclam);
+		}),
+		function(){
+			return !instance_exists(encounter_anim);
+		}
+	));
+}
+
+///@arg sound
+///@arg priority* (default false)
+///@arg loop*     (default false)
+///@arg wait*     (default false; wait=true forces loop false)
+function cutscene_sfx_play(){
+	var sound=argument[0];
+	var priority=false;
+	var loop=false;
+	var wait=false;
+	if(argument_count>1)priority=argument[1];
+	if(argument_count>2)loop=argument[2];
+	if(argument_count>3)wait=argument[3];
+	if(wait)loop=false;
+
+	var ev=cutscene_make_event();
+	ev.sound=sound;
+	ev.priority=priority;
+	ev.loop=loop;
+	ev.audio_id=-1;
+	ev.call=method(ev,function(){
+		audio_id=SFX_Play(sound,priority,loop);
+	});
+	if(wait){
+		ev.resume=method(ev,function(){
+			if(audio_id<0)return true;
+			return !audio_is_playing(audio_id);
+		});
+	}
+	cutscene_queue_event(global.current_cutscene,ev);
+}
+
+///@arg audio_id
+function cutscene_sfx_stop(){
+	var audio_id=argument[0];
+	cutscene_queue_event(global.current_cutscene,cutscene_make_event(
+		method({audio_id:audio_id},function(){
+			SFX_Stop(audio_id);
+		})
+	));
+}
+
+///@arg slot
+function cutscene_bgm_pause(){
+	var slot=argument[0];
+	cutscene_queue_event(global.current_cutscene,cutscene_make_event(
+		method({slot:slot},function(){
+			BGM_Pause(slot);
+		})
+	));
+}
+
+///@arg slot
+function cutscene_bgm_resume(){
+	var slot=argument[0];
+	cutscene_queue_event(global.current_cutscene,cutscene_make_event(
+		method({slot:slot},function(){
+			BGM_Resume(slot);
+		})
+	));
+}
+
+///@arg slot
+function cutscene_bgm_stop(){
+	var slot=argument[0];
+	cutscene_queue_event(global.current_cutscene,cutscene_make_event(
+		method({slot:slot},function(){
+			BGM_Stop(slot);
+		})
+	));
+}

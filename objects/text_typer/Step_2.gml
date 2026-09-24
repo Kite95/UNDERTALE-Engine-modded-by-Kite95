@@ -3,35 +3,36 @@ _voice_played=false;
 event_user(4);
 
 if(!_measured&&text!=""){
-	var m=Measure(text);
+	var m=Typer_Measure(text);
 	_measure_w=m[0];
 	_measure_h=m[1];
+	height=_measure_h;
 	_measured=true;
-	AlignApply();
+	Typer_Align();
 	if(_mini_auto_layout){
-		_mini_positions=ScanMinis(text);
+		_mini_positions=Typer_MiniScan(text);
 		_mini_pos_index=0;
 	}
 	if(_callback_start_pend){
 		_callback_start_pend=false;
-		TriggerCallback(0);
+		Typer_Callback(0);
 	}
 }
 
-var _super_hold=_super_skip&&Input_IsHeld(INPUT.MENU)&&!_choice_active&&_char_proc<=string_length(text);
-if(_super_hold){
-	if(_super_skip_mode==0){
+var _hold_skip_held=_hold_skip&&Input_IsHeld(INPUT.MENU)&&!_choice_active&&_char_proc<=string_length(text);
+if(_hold_skip_held){
+	if(_hold_skip_mode==0){
 		_skipping=true;
 		_sleep=0;
 		_char_frame_remain=0;
 		if(_paused){
-			_super_skip_timer-=1;
-			if(_super_skip_timer<=0){
+			_hold_skip_timer-=1;
+			if(_hold_skip_timer<=0){
 				_paused=false;
-				_super_skip_timer=_super_skip_interval;
+				_hold_skip_timer=_hold_skip_interval;
 			}
 		}else{
-			_super_skip_timer=_super_skip_interval;
+			_hold_skip_timer=_hold_skip_interval;
 		}
 	}else{
 		_paused=false;
@@ -39,7 +40,7 @@ if(_super_hold){
 		_char_frame_remain=0;
 	}
 }else{
-	_super_skip_timer=_super_skip_interval;
+	_hold_skip_timer=_hold_skip_interval;
 }
 
 if(_skippable&&!_paused&&Input_IsPressed(INPUT.CANCEL)){
@@ -48,7 +49,7 @@ if(_skippable&&!_paused&&Input_IsPressed(INPUT.CANCEL)){
 	_char_frame_remain=0;
 }
 
-ChoiceStep();
+Typer_ChoiceStep();
 
 if(_paused&&Input_IsPressed(INPUT.CONFIRM)&&!_choice_active){
 	_paused=false;
@@ -64,12 +65,19 @@ if(_char_proc<string_length(text)+1){
 			}else{
 				do{
 					var _cpf=_char_per_frame;
-					if(_super_hold&&_super_skip_mode==1){
-						_cpf=_super_skip_speed;
+					if(_hold_skip_held&&_hold_skip_mode==1){
+						_cpf=_hold_skip_speed;
 					}
 					repeat(_cpf){
-						while((string_char_at(text,_char_proc)=="{"||string_char_at(text,_char_proc)=="\n"||(_skip_space&&(string_char_at(text,_char_proc)==" "||string_char_at(text,_char_proc)=="　")))&&((_sleep==0||_skipping||_instant)&&!_paused&&_char_proc<=string_length(text))){
-							while(string_char_at(text,_char_proc)=="{"&&((_sleep==0||_skipping||_instant)&&!_paused&&_char_proc<=string_length(text))){
+						var _choice_collecting=(_choice_dir==3&&_choice_skip_render);
+						if(_choice_collecting){
+							_sleep=0;
+							_char_frame_remain=0;
+						}
+						var _fast=((_sleep==0||_skipping||_instant||_choice_collecting)&&!_paused&&_char_proc<=string_length(text));
+						while((string_char_at(text,_char_proc)=="{"||(!_choice_collecting&&string_char_at(text,_char_proc)=="\n")||(!_choice_collecting&&_skip_space&&(string_char_at(text,_char_proc)==" "||string_char_at(text,_char_proc)=="　")))&&_fast){
+							while(string_char_at(text,_char_proc)=="{"&&_fast){
+								var cmd_start=_char_proc;
 								_char_proc+=1;
 								ds_list_clear(_list_cmd);
 								var loop=true;
@@ -107,8 +115,15 @@ if(_char_proc<string_length(text)+1){
 										}
 									}
 									if(cmd_char=="}"&&!str_input){
-										event_user(2);
+										var cmd_name=ds_list_empty(_list_cmd) ? "" : _list_cmd[|0];
+										if(_choice_dir==3&&_choice_skip_render&&is_string(cmd_name)&&!Typer_ChoiceCmdIsControl(cmd_name)){
+											_choice_collect_text+=string_copy(text,cmd_start,_char_proc-cmd_start+1);
+										}else{
+											event_user(2);
+										}
 										loop=false;
+										_choice_collecting=(_choice_dir==3&&_choice_skip_render);
+										_fast=((_sleep==0||_skipping||_instant||_choice_collecting)&&!_paused&&_char_proc<=string_length(text));
 									}
 									_char_proc+=1;
 								}
@@ -117,30 +132,34 @@ if(_char_proc<string_length(text)+1){
 								}
 							}
 							
-							while(string_char_at(text,_char_proc)=="\n"&&((_sleep==0||_skipping||_instant)&&!_paused&&_char_proc<=string_length(text))){
+							while(!_choice_collecting&&string_char_at(text,_char_proc)=="\n"&&_fast){
 								event_user(1);
 								_char_proc+=1;
 							}
 							
-							while(_skip_space&&(string_char_at(text,_char_proc)==" "||string_char_at(text,_char_proc)=="　")&&((_sleep==0||_skipping||_instant)&&!_paused&&_char_proc<=string_length(text))){
+							while(!_choice_collecting&&_skip_space&&(string_char_at(text,_char_proc)==" "||string_char_at(text,_char_proc)=="　")&&_fast){
 								_char=" ";
 								event_user(0);
 								_char_proc+=1;
 							}
+							_choice_collecting=(_choice_dir==3&&_choice_skip_render);
+							_fast=((_sleep==0||_skipping||_instant||_choice_collecting)&&!_paused&&_char_proc<=string_length(text));
 						}
 						
-						if((_sleep==0||_skipping||_instant)&&!_paused&&_char_proc<=string_length(text)){
+						if(_fast){
 							_char=string_char_at(text,_char_proc);
 							if(_char=="\\"){
 								_char_proc+=1;
 								_char=string_char_at(text,_char_proc);
 							}
 							event_user(0);
-							_char_frame_remain=_speed;
+							if(!(_choice_dir==3&&_choice_skip_render)){
+								_char_frame_remain=_speed;
+							}
 							_char_proc+=1;
 						}
 					}
-				}until(_char_proc>string_length(text)||_paused||(!_skipping&&!_instant));
+				}until(_char_proc>string_length(text)||_paused||(!_skipping&&!_instant&&!(_choice_dir==3&&_choice_skip_render)));
 			}
 		}
 	}
@@ -152,16 +171,16 @@ if(_voice_mode==1&&_voice>=0){
 		_voice_mode_timer-=1;
 		if(_voice_mode_timer<=0){
 			_voice_mode_timer=_voice_mode_interval;
-			_voice_loop_snd=Voice_PlayOnce();
+			_voice_loop_snd=Typer_VoicePlay();
 		}
 	}else{
-		Voice_StopLoop();
+		Typer_VoiceStop();
 	}
 }
 
 if(_char_proc>string_length(text)&&!_callback_end_done){
 	_callback_end_done=true;
-	TriggerCallback(1);
+	Typer_Callback(1);
 }
 
 if(instance_exists(_face)){

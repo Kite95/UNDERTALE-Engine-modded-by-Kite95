@@ -22,6 +22,7 @@ function BGM_Play() {
 		BGM_Stop(SLOT);
 		global._bgm_audio[SLOT]=AUDIO;
 		global._bgm_id[SLOT]=audio_play_sound(AUDIO,1,LOOP);
+		audio_sound_gain(global._bgm_id[SLOT],BGM_GetGain(),0);
 		global._bgm_loop_start[SLOT]=LOOP_START;
 		global._bgm_loop_end[SLOT]=LOOP_END;
 		return true;

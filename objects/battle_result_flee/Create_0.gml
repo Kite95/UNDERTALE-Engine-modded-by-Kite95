@@ -6,4 +6,4 @@ y=battle_soul.y;
 _ended=false;
 _fade_color=c_black;
 
-audio_play_sound(snd_flee,0,false);
+SFX_Play(snd_flee,0,false);

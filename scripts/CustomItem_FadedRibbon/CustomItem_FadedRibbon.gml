@@ -12,6 +12,6 @@ function CustomItem_FadedRibbon() : ItemTypeSimple("faded_ribbon") constructor{
 
 		Player_SetDefItem(3);
 
-		audio_play_sound(snd_item_equip,0,false);
+		SFX_Play(snd_item_equip,0,false);
 	}
 }

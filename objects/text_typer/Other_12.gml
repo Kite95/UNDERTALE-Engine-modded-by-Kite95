@@ -10,7 +10,7 @@ switch(cmd[|0]){
 		}
 		break;
 		
-	case "color":
+	case "color": // {color `name`} preset white/yellow/red/black...
 		if(is_string(cmd[|1])){
 			var color=GetColorFromString(cmd[|1]);
 			switch(color){
@@ -61,7 +61,7 @@ switch(cmd[|0]){
 		}
 		break;
 		
-	case "color_text":
+	case "color_text": // {color_text `name`} solid fill  {color_text a b c d} vertical blend, top to bottom
 		var ARGC=ds_list_size(cmd)-1;
 		if(ARGC==1||ARGC==4){
 			var proc=0;
@@ -188,7 +188,7 @@ switch(cmd[|0]){
 		}
 		break;
 		
-	case "sleep":
+	case "sleep": // {sleep n} wait n frames (~n/30 s at 30fps)
 		if(is_real(cmd[|1])&&!_skipping&&!_instant){
 			if(cmd[|1]>=0){
 				_sleep=cmd[|1];
@@ -215,16 +215,16 @@ switch(cmd[|0]){
 		}
 		break;
 		
-	case "voice":
+	case "voice": // {voice n} voice group  {voice -1} mute
 		if(is_real(cmd[|1])){
 			if(cmd[|1]==-1 || (cmd[|1]>=0 && cmd[|1]<array_height_2d(_group_voice))){
 				_voice=cmd[|1];
-				Voice_ApplyGroup();
+				Typer_VoiceApply();
 			}
 		}
 		break;
 		
-	case "voice_single":
+	case "voice_single": // {voice_single n} slot in current group  {voice_single -1} random
 		if(is_real(cmd[|1])){
 			if(cmd[|1]==-1 || cmd[|1]>=0 && cmd[|1]<array_length_2d(_group_voice,_voice)){
 				_voice_single=cmd[|1];
@@ -246,7 +246,7 @@ switch(cmd[|0]){
 		}
 		break;
 		
-	case "font":
+	case "font": // {font n} font group
 		if(is_real(cmd[|1])){
 			if(cmd[|1]>=0&&cmd[|1]<array_height_2d(_group_font)){
 				_font=cmd[|1];
@@ -257,13 +257,14 @@ switch(cmd[|0]){
 	case "clear":
 		event_user(3);
 		var remaining=string_copy(text,_char_proc,string_length(text)-_char_proc+1);
-		var m_clear=Measure(remaining,_font,_scale_x,_scale_y,_space_x,_space_y);
+		var m_clear=Typer_Measure(remaining,_font,_scale_x,_scale_y,_space_x,_space_y);
 		_measure_w=m_clear[0];
 		_measure_h=m_clear[1];
+		height=_measure_h;
 		_measured=true;
-		AlignApply();
+		Typer_Align();
 		if(_mini_auto_layout){
-			_mini_positions=ScanMinis(remaining);
+			_mini_positions=Typer_MiniScan(remaining);
 			_mini_pos_index=0;
 		}
 		break;
@@ -303,7 +304,7 @@ switch(cmd[|0]){
 		}
 		break;
 	
-	case "define":
+	case "define": // {define `NAME` value} then {insert NAME}
 		if(is_string(cmd[|1])&&(is_real(cmd[|2])||is_string(cmd[|2]))){
 			variable_struct_remove(_macro,cmd[|1]);
 			_macro[$ cmd[|1]]=cmd[|2];
@@ -317,7 +318,6 @@ switch(cmd[|0]){
 		break;
 
 	case "gold":
-		// {gold 50} add; also defines GOLD for {insert GOLD}
 		if(is_real(cmd[|1])){
 			Player_SetGold(Player_GetGold()+cmd[|1]);
 			variable_struct_remove(_macro,"GOLD");
@@ -325,50 +325,50 @@ switch(cmd[|0]){
 		}
 		break;
 		
-	case "insert":
+	case "insert": // {insert NAME} expand macro, or insert literal
 		if(is_real(cmd[|1])||is_string(cmd[|1])){
 			text=string_insert(string(cmd[|1]),text,_char_proc+1);
 		}
 		break;
 		
-	case "choice":
+	case "choice": // {choice n} register slot  {choice `NAME`} / {choice} activate; dir 3 absorbs following text as option
 		if(is_real(cmd[|1])){
 			if(cmd[|1]>=0){
-				ChoiceRegister(cmd[|1]);
+				Typer_ChoiceRegister(cmd[|1]);
 			}
 		}else if(is_string(cmd[|1])||is_undefined(cmd[|1])){
 			_choice_macro=cmd[|1];
-			ChoiceActivate();
+			Typer_ChoiceActivate();
 		}
 		break;
 
 	case "choice_end":
-		ChoiceActivate();
+		Typer_ChoiceActivate();
 		break;
 
-	case "choice_none":
-		_choice_none=ChoiceParseBool(cmd[|1]);
-		break;
-
-	case "choice_reject_snd":
-		_choice_reject_snd=ChoiceParseBool(cmd[|1]);
+	case "choice_default": // {choice_default n} start on slot n  {choice_default -1} center, unselected
+		if(is_real(cmd[|1])){
+			_choice_default=cmd[|1];
+		}
 		break;
 
 	case "choice_anim":
-		_choice_anim=ChoiceParseBool(cmd[|1]);
+		if(is_bool(cmd[|1])){
+			_choice_anim=bool(cmd[|1]);
+		}
 		break;
 
-	case "choice_center":
+	case "choice_center": // {choice_center} dialog center  {choice_center x y} manual offset
 		if(is_real(cmd[|1])&&is_real(cmd[|2])){
 			_choice_cx=cmd[|1];
 			_choice_cy=cmd[|2];
 			_choice_center_manual=true;
 		}else{
-			ChoiceSetCenterFromCursor();
+			Typer_ChoiceSetCenterDefault();
 		}
 		break;
 
-	case "choice_dir":
+	case "choice_dir": // {choice_dir n} 0 left-right, 1 up-down, 2 grid, 3 compass (slots 0 up, 1 left, 2 right, 3 down)
 		if(is_real(cmd[|1])){
 			_choice_dir=cmd[|1];
 		}
@@ -398,40 +398,34 @@ switch(cmd[|0]){
 		}
 		break;
 
-	case "super_skip":
+	case "hold_skip": // {hold_skip false} disable hold-MENU fast-forward
 		if(is_bool(cmd[|1])){
-			_super_skip=bool(cmd[|1]);
+			_hold_skip=bool(cmd[|1]);
 		}
 		break;
 
-	case "super_skip_mode":
-		if(is_real(cmd[|1])){
-			_super_skip_mode=clamp(cmd[|1],0,1);
-		}
-		break;
-
-	case "halign":
+	case "halign": // {halign n} 0 left, 1 center, 2 right
 		if(is_real(cmd[|1])){
 			if(cmd[|1]>=0&&cmd[|1]<=2){
 				_halign=cmd[|1];
-				AlignApply();
+				Typer_Align();
 			}
 		}
 		break;
 
-	case "valign":
+	case "valign": // {valign n} 0 top, 1 middle, 2 bottom
 		if(is_real(cmd[|1])){
 			if(cmd[|1]>=0&&cmd[|1]<=2){
 				_valign=cmd[|1];
-				AlignApply();
+				Typer_Align();
 			}
 		}
 		break;
 
-	case "per_line_align":
+	case "per_line_align": // {per_line_align false} align as block; true aligns each line
 		if(is_bool(cmd[|1])){
 			_per_line_align=bool(cmd[|1]);
-			AlignApply();
+			Typer_Align();
 		}
 		break;
 
@@ -455,7 +449,7 @@ switch(cmd[|0]){
 		}
 		break;
 	
-	case "if":
+	case "if": // {if a op b `yes` else `no`} insert first branch when true
 		var target_0=cmd[|1];
 		var operator=cmd[|2];
 		var target_1=cmd[|3];
@@ -494,7 +488,7 @@ switch(cmd[|0]){
 		}
 		break;
 		
-	case "face":
+	case "face": // {face n} attach face group  {face -1} remove
 		if(is_real(cmd[|1])){
 			var fface=cmd[|1];
 			if(fface==-1){
@@ -519,7 +513,7 @@ switch(cmd[|0]){
 		}
 		break;
 		
-	case "face_emotion":
+	case "face_emotion": // {face_emotion n} set emotion on attached / linked face
 		if(is_real(cmd[|1])){
 			var femotion=cmd[|1];
 			
@@ -540,7 +534,7 @@ switch(cmd[|0]){
 		}
 		break;
 		
-	case "face_link":
+	case "face_link": // {face_link id} bind overworld face by face_id
 		if(is_real(cmd[|1])){
 			_face_linked=cmd[|1];
 		}
@@ -550,7 +544,7 @@ switch(cmd[|0]){
 		_face_linked=-1;
 		break;
 		
-	case "effect":
+	case "effect": // {effect n} enable effect  {effect -1} off
 		if(is_real(cmd[|1])){
 			if(cmd[|1]>=-1){
 				_effect=cmd[|1];
@@ -570,7 +564,7 @@ switch(cmd[|0]){
 		}
 		break;
 		
-	case "sound":
+	case "sound": // {sound `asset`} play SFX once
 		var target=-1;
 		if(is_real(cmd[|1])){
 			target=cmd[|1];
@@ -578,11 +572,11 @@ switch(cmd[|0]){
 			target=asset_get_index(cmd[|1]);
 		}
 		if(audio_exists(target)){
-			audio_play_sound(target,0,false);
+			SFX_Play(target,0,false);
 		}
 		break;
 		
-	case "script":
+	case "script": // {script `name` …} call script with optional args
 		var target=-1;
 		if(is_real(cmd[|1])){
 			target=cmd[|1];
@@ -643,7 +637,7 @@ switch(cmd[|0]){
 		}
 		break;
 		
-	case "char_link":
+	case "char_link": // {char_link id} bind char_id; talks while typing
 		if(is_real(cmd[|1])){
 			_char_linked=cmd[|1];
 		}
@@ -653,7 +647,7 @@ switch(cmd[|0]){
 		_char_linked=-1;
 		break;
 		
-	case "char_dir":
+	case "char_dir": // {char_dir id DIR_CHAR.*} set facing
 		if(is_real(cmd[|1])&&is_real(cmd[|2])){
 			if(instance_exists(char)){
 				var cid=cmd[|1];
@@ -667,7 +661,7 @@ switch(cmd[|0]){
 		}
 		break;
 		
-	case "char_move":
+	case "char_move": // {char_move id DIR_CHAR.* n} set walk on axis
 		if(is_real(cmd[|1])&&is_real(cmd[|2])&&is_real(cmd[|3])){
 			if(instance_exists(char)){
 				var cid=cmd[|1];
@@ -685,12 +679,12 @@ switch(cmd[|0]){
 	case "char_player_moveable":
 		if(is_real(cmd[|1])){
 			if(instance_exists(char_player)){
-				char_player.moveable=cmd[1];
+				char_player.moveable=cmd[|1];
 			}
 		}
 		break;
 		
-	case "sprite":
+	case "sprite": // {sprite `name`}  {sprite `name` frame} optional frame index
 		var spr=cmd[|1];
 		if(is_string(spr)){
 			spr=asset_get_index(spr);
@@ -745,7 +739,7 @@ switch(cmd[|0]){
 		}
 		break;
 
-	case "mini":
+	case "mini": // {mini `text`}  {mini `text` face emotion} optional face group + emotion
 		if(variable_instance_exists(id,"_is_mini")&&_is_mini)break;
 		if(ds_list_size(cmd)<2)break;
 		var mtxt=cmd[|1];
@@ -765,7 +759,7 @@ switch(cmd[|0]){
 		var mw=0;
 		var mscale=_scale_x*0.5;
 		if(mtxt!=""){
-			var mm=Measure(mtxt,mfont,mscale,mscale,0,0);
+			var mm=Typer_Measure(mtxt,mfont,mscale,mscale,0,0);
 			mw=mm[0];
 		}
 		var left_edge=x+_mini_left+mox;

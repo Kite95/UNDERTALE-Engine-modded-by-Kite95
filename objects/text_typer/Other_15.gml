@@ -15,17 +15,24 @@ _macro[$ "VOICE.NULL"]=-1;
 _macro[$ "VOICE.DEFAULT"]=0;
 _macro[$ "VOICE.TYPER"]=1;
 
-Lang_BindTyperGroup(0,"dialog");
-Lang_BindTyperGroup(1,"menu");
-Lang_BindTyperGroup(2,"battle");
-
-_group_voice[0,0]=snd_text_voice_default;
-_group_voice[1,0]=snd_text_voice_typer;
+Typer_BindGroup(0,"dialog");
+Typer_BindGroup(1,"menu");
+Typer_BindGroup(2,"battle");
 
 // examples:
-// _group_voice_interval[1]=3;
-// _group_voice_pitch[1]=0.9;
-// _group_voice_pitch_random[1]=0.15;
-// _group_voice_stop[1]=false;
+// Typer_BindGroup(3,"sans",font_sans);
+// Typer_BindGroup(3,"sans",font_sans,font_sans_cn);
+// Typer_BindGroup(3,"sans",{
+//	ascii:{font:font_sans,scale:1,space_x:0},
+//	other:{font:font_sans_cn,scale:1,space_x:1},
+//	space_y:2
+// });
+
+Typer_BindVoice(0,snd_text_voice_default);
+Typer_BindVoice(1,snd_text_voice_typer);
+
+// examples:
+// Typer_BindVoice(4,{sounds:[snd_text_voice_sans],stop:false});
+// Typer_BindVoice(2,{sounds:[snd_a,snd_b],pitch:0.9,pitch_random:0.15,interval:3});
 
 _group_face[0]=face;

@@ -42,6 +42,10 @@
 // language — locale id (datafiles/locale/{id}/)
 #macro FLAG_SETTINGS_LANGUAGE "language"
 #macro FLAG_SETTINGS_BORDER "border"
+// volume — 0..100 (applied via BGM_GetGain / SFX_GetGain)
+#macro FLAG_SETTINGS_MASTER_VOLUME "master_volume"
+#macro FLAG_SETTINGS_BGM_VOLUME "bgm_volume"
+#macro FLAG_SETTINGS_SOUND_EFFECTS "sound_effects"
 #endregion
 
 

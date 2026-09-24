@@ -22,5 +22,10 @@ function Storage_SaveSettings(key,value){
 }
 function Storage_LoadSettings(){
 	var s=Storage_GetSettings();
-	s.LoadFromFile();
+	if(s.IsFileExists()){
+		s.LoadFromFile();
+	}
+	if(Settings_FillDefaults()){
+		s.SaveToFile();
+	}
 }

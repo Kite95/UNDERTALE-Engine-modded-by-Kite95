@@ -1,4 +1,9 @@
 ///@desc New Char
+if(_choice_dir==3&&_choice_skip_render){
+	_choice_collect_text+=_char;
+	exit;
+}
+
 var font=0;
 
 if(ord(_char)<128){
@@ -15,7 +20,9 @@ var chars=(variable_instance_exists(id,"_group_font_chars") ? _group_font_chars[
 var spacing=Typer_CharSpacing(chars,_char,next_ch);
 var off_before=spacing[0]*scale_x;
 var off_after=spacing[1]*scale_x;
-var wid_cur=(wid_char+_group_font_space_x[_font,font]+_space_x+spacing[2])*scale_x;
+var next_face=(next_ch!=""&&ord(next_ch)<128)?0:1;
+var space_face=Typer_FaceSpaceX(_group_font_space_x[_font,font],_group_font_space_x[_font,next_face],_char,next_ch);
+var wid_cur=(wid_char+space_face+_space_x+spacing[2])*scale_x;
 _char_x+=off_before;
 
 if(_char!=" "&&_char!="　"){
@@ -23,7 +30,8 @@ if(_char!=" "&&_char!="　"){
 	var H1=string_height(" ");
 	draw_set_font(_group_font[_font,font]);
 	var H2=string_height(" ");
-	var OFFSET=(H1-H2)/2*_scale_y;
+	var off_y=Typer_CharOffsetY(chars,_char)*_group_font_scale_y[_font,font]*_scale_y;
+	var OFFSET=(H1-H2)/2*_scale_y+off_y;
 	
 	var rot=RotateXY(x+_char_x,y+_char_y+OFFSET,x,y,_angle);
 	var INST=instance_create_depth(rot[0],rot[1],depth,text_single);
@@ -68,7 +76,7 @@ if(_char!=" "&&_char!="　"){
 	}
 	ds_list_add(_list_inst,INST);
 
-	if(_per_line_align&&_halign==1){
+	if(_per_line_align){
 		var min_x=999999;
 		var max_x=-999999;
 		var proc=0;
@@ -85,7 +93,18 @@ if(_char!=" "&&_char!="　"){
 			proc+=1;
 		}
 		if(min_x<999999){
-			var shift=-(min_x+max_x)/2;
+			var shift=0;
+			switch(_halign){
+				case 1:
+					shift=-(min_x+max_x)/2;
+					break;
+				case 2:
+					shift=-max_x;
+					break;
+				default:
+					shift=-min_x;
+					break;
+			}
 			var proc2=0;
 			repeat(ds_list_size(_list_inst)){
 				var INST2=ds_list_find_value(_list_inst,proc2);
@@ -98,11 +117,12 @@ if(_char!=" "&&_char!="　"){
 				proc2+=1;
 			}
 			_char_x+=shift;
+			Typer_ChoiceShiftLine(_line,shift);
 		}
 	}
 	
 	if(!_voice_played&&!_skipping&&!_instant&&_voice>=0&&_voice_mode==0){
-		if(Voice_PlayOnce()!=-1){
+		if(Typer_VoicePlay()!=-1){
 			_voice_played=true;
 		}
 	}
@@ -113,4 +133,14 @@ _char_x+=wid_cur+off_after;
 
 if(width<_char_x){
 	width=_char_x;
+}
+
+draw_set_font(_group_font[_font,0]);
+var line_h=(string_height(" ")+_group_font_space_y[_font]+_space_y)*_group_font_scale_y[_font,0]*_scale_y;
+if(sprite_exists(_char_sprite)){
+	line_h=max(line_h,(sprite_get_height(_char_sprite)-sprite_get_yoffset(_char_sprite))*_scale_y);
+}
+var h=_char_y-_align_offset_y+line_h;
+if(height<h){
+	height=h;
 }

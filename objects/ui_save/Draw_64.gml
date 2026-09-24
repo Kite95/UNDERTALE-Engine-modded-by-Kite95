@@ -5,14 +5,16 @@ if(_state==0||_state==1){
 
 if(_state==0){
 	if(_choice==0){
-		draw_sprite(spr_battle_soul_red,0,108+6+37+_save_off_x,118+6+131);
+		draw_sprite_ext(spr_soul_small,0,108+6+37+_save_off_x,118+8+132,2,2,0,c_white,1);
 	}else{
-		draw_sprite(spr_battle_soul_red,0,108+6+217+_return_off_x,118+6+131);
+		draw_sprite_ext(spr_soul_small,0,108+6+217+_return_off_x,118+8+132,2,2,0,c_white,1);
 	}
 }
 
 if(_state==10||_state==11||_state==12){
-	draw_sprite_ext(spr_pixel,0,0,0,640,480,0,c_black,0.8);
+	if(_state!=11){
+		draw_sprite_ext(spr_pixel,0,0,0,640,480,0,c_black,0.8);
+	}
 	
 	draw_sprite_ext(spr_pixel,0,68,20,506,90,0,c_white,1);
 	draw_sprite_ext(spr_pixel,0,74,26,494,78,0,c_black,1);
@@ -34,11 +36,25 @@ if(_state==11){
 }
 
 if(_state==10||_state==11){
-	var choice=(_state==10 ? _slot_choice : _overwrite_choice);
-	if(array_length(_hl[choice])>0){
-		var inst=_hl[choice][0];
-		if(instance_exists(inst)){
-			draw_sprite(spr_battle_soul_red,0,inst.x+inst._align_offset_x-19,inst.y+15);
+	var inst=noone;
+	if(_state==10){
+		if(_slot_choice<3){
+			if(instance_exists(_inst_slot[_slot_choice])){
+				inst=_inst_slot[_slot_choice];
+			}else{
+				inst=_inst_slot_lv[_slot_choice];
+			}
+		}else{
+			inst=_inst_return;
 		}
+	}else{
+		if(_overwrite_choice==0){
+			inst=_inst_save;
+		}else{
+			inst=_inst_overwrite_return;
+		}
+	}
+	if(instance_exists(inst)){
+		draw_sprite_ext(spr_soul_small,0,inst.x+inst._align_offset_x-19,inst.y+18,2,2,0,c_white,1);
 	}
 }
