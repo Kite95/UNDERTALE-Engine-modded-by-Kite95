@@ -1,7 +1,7 @@
 if(Encounter_IsExists(_encounter)&&instance_exists(char_player)){
 	if(_exclam){
 		var inst=instance_create_depth(0,0,0,exclamation);
-		inst.x=char_player.x;
+		inst.x=char_player.x-2;
 		inst.y=char_player.y-char_player.sprite_height;
 		var time=20+irandom(5);
 		inst.time=time;

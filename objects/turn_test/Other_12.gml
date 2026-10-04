@@ -2,6 +2,7 @@ Battle_SetTurnTime(-1)
 start = 1
 
 instance_create_depth(0,0,0,battle_bullet_test)
+instance_create_depth(320,320,0,battle_bullet_kill)
 instance_create_depth(0,500,0,battle_bg)
 
 /*aa = Battle_CreateBoardExtra(320,320)

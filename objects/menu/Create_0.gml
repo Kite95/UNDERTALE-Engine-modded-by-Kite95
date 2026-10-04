@@ -1,7 +1,7 @@
 _menu=0;
 _mode=0;
 
-_prefix="{gui true}{instant true}{shadow false}{font 1}{scale 2}{depth "+string(DEPTH_UI.TEXT)+"}";
+_prefix="{gui true}{instant true}{font 1}{scale 2}{depth "+string(DEPTH_UI.TEXT)+"}";
 _prefix_outline=_prefix+"{outline true}{color_outline `black`}";
 
 _inst_instruction=noone;

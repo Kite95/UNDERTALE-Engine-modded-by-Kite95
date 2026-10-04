@@ -158,7 +158,7 @@ function Shop_SetDialogAutoEnd(v){
 }
 
 function Shop_TyperPrefix(){
-	return "{space_y 4}{scale 2}{speed "+string(Lang_GetLayout("speed.dialog_shop",0))+"}{shadow false}{gui false}{depth "+string(DEPTH_SHOP.DIALOG)+"}";
+	return "{space_y 4}{scale 2}{speed "+string(Lang_GetLayout("speed.dialog_shop",0))+"}{gui false}{depth "+string(DEPTH_SHOP.DIALOG)+"}";
 }
 
 ///@arg text*

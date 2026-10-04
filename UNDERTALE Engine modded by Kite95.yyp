@@ -21,6 +21,7 @@
     {"id":{"name":"spr_battle_soul_red","path":"sprites/spr_battle_soul_red/spr_battle_soul_red.yy",},"order":3,},
     {"id":{"name":"Battle_GetTurnInfo","path":"scripts/Battle_GetTurnInfo/Battle_GetTurnInfo.yy",},"order":2,},
     {"id":{"name":"spr_battle_soul_break","path":"sprites/spr_battle_soul_break/spr_battle_soul_break.yy",},"order":5,},
+    {"id":{"name":"spr_gameover","path":"sprites/spr_gameover/spr_gameover.yy",},"order":6,},
     {"id":{"name":"Battle_SetEnemyActionName","path":"scripts/Battle_SetEnemyActionName/Battle_SetEnemyActionName.yy",},"order":2,},
     {"id":{"name":"spr_battle_soul_slice","path":"sprites/spr_battle_soul_slice/spr_battle_soul_slice.yy",},"order":7,},
     {"id":{"name":"Battle_IsSoulValid","path":"scripts/Battle_IsSoulValid/Battle_IsSoulValid.yy",},"order":2,},
@@ -28,6 +29,7 @@
     {"id":{"name":"spr_battle_dialog_enemy_spike","path":"sprites/spr_battle_dialog_enemy_spike/spr_battle_dialog_enemy_spike.yy",},"order":3,},
     {"id":{"name":"block_corner_topright","path":"objects/block_corner_topright/block_corner_topright.yy",},"order":26,},
     {"id":{"name":"battle_bullet_test","path":"objects/battle_bullet_test/battle_bullet_test.yy",},"order":2,},
+    {"id":{"name":"battle_bullet_kill","path":"objects/battle_bullet_kill/battle_bullet_kill.yy",},"order":3,},
     {"id":{"name":"spr_battle_dialog_enemy_spike_wide","path":"sprites/spr_battle_dialog_enemy_spike_wide/spr_battle_dialog_enemy_spike_wide.yy",},"order":5,},
     {"id":{"name":"spr_battle_menu_fight_bg","path":"sprites/spr_battle_menu_fight_bg/spr_battle_menu_fight_bg.yy",},"order":1,},
     {"id":{"name":"Battle_GetPlayerTempAtk","path":"scripts/Battle_GetPlayerTempAtk/Battle_GetPlayerTempAtk.yy",},"order":0,},
@@ -453,6 +455,7 @@
     {"id":{"name":"block","path":"objects/block/block.yy",},"order":22,},
     {"id":{"name":"gameover","path":"objects/gameover/gameover.yy",},"order":6,},
     {"id":{"name":"gameover_shard","path":"objects/gameover_shard/gameover_shard.yy",},"order":7,},
+    {"id":{"name":"gameover_anim","path":"objects/gameover_anim/gameover_anim.yy",},"order":8,},
     {"id":{"name":"exclamation","path":"objects/exclamation/exclamation.yy",},"order":8,},
     {"id":{"name":"Battle_SetMenuDialog","path":"scripts/Battle_SetMenuDialog/Battle_SetMenuDialog.yy",},"order":1,},
     {"id":{"name":"Battle_IsMenuChoiceMercyOverride","path":"scripts/Battle_IsMenuChoiceMercyOverride/Battle_IsMenuChoiceMercyOverride.yy",},"order":7,},
@@ -710,6 +713,6 @@
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"simsun.ttf","CopyToMask":-1,"filePath":"datafiles/font",},
   ],
   "MetaData": {
-    "IDEVersion": "2022.0.3.85",
+    "IDEVersion": "2022.0.2.51",
   },
 }

@@ -10,7 +10,7 @@ _slot_peek[0]=-1;
 _slot_peek[1]=-1;
 _slot_peek[2]=-1;
 
-_prefix="{shadow false}{scale 2}{font 1}{instant true}{gui true}{depth "+string(DEPTH_UI.TEXT)+"}";
+_prefix="{scale 2}{font 1}{instant true}{gui true}{depth "+string(DEPTH_UI.TEXT)+"}";
 
 _save_off_x=Lang_GetLayout("save.save_x",0);
 _return_off_x=Lang_GetLayout("save.return_x",0);

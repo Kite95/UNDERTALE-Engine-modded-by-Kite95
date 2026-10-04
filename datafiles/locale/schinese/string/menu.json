@@ -22,8 +22,6 @@
     "menu.erase.warn": "然后它就会被销毁。",
     "menu.erase.really": "真的要删除吗？",
     "menu.erase.done": "档案已删除。",
-    "menu.yes_bang": "是！",
-    "menu.no_bang": "否！",
     "menu.file.empty": "[空]",
     "menu.file.time.empty": "--:--",
     "menu.file.room.empty": "---------",
@@ -36,6 +34,8 @@
 
     "menu.yes": "是",
     "menu.no": "否",
+    "menu.yes_bang": "是！",
+    "menu.no_bang": "否！",
 
     "menu.confirm.title": "是这个名字没错了吗？",
     "menu.confirm.title.reset": "已经选择一个名字了。",

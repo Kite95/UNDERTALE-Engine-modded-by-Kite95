@@ -13,7 +13,7 @@ _choice_item=0;
 _choice_item_operate=0;
 _choice_phone=0;
 
-_prefix="{shadow false}{scale 2}{font 1}{instant true}{gui true}{depth "+string(DEPTH_UI.TEXT)+"}";
+_prefix="{scale 2}{font 1}{instant true}{gui true}{depth "+string(DEPTH_UI.TEXT)+"}";
 _inst_name=noone;
 _inst_menu=noone;
 _inst_item=noone;

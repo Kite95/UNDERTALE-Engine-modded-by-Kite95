@@ -780,7 +780,7 @@ switch(cmd[|0]){
 
 		if(!variable_instance_exists(id,"_list_mini"))_list_mini=ds_list_create();
 		var gui_str=_gui ? "true" : "false";
-		var prefix="{instant true}{skippable false}{voice -1}{shadow false}";
+		var prefix="{instant true}{skippable false}{voice -1}";
 		prefix+="{gui "+gui_str+"}";
 		prefix+="{depth "+string(depth-1)+"}";
 		prefix+="{font "+string(mfont)+"}";

@@ -1,6 +1,6 @@
 _choice=0;
 
-_prefix="{gui true}{instant true}{shadow false}{font 1}{scale 2}";
+_prefix="{gui true}{instant true}{font 1}{scale 2}";
 _inst_title=noone;
 _inst_exit=noone;
 _inst_language_title=noone;

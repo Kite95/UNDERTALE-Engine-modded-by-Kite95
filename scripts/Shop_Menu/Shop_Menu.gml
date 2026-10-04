@@ -188,7 +188,7 @@ function Shop_SetMenuBuy(){
 			var px=240+Lang_GetLayout("shop.dialog.base_x",0);
 			var py=420+Lang_GetLayout("shop.dialog.base_y",0);
 			shop._inst_page=instance_create_depth(px,py,DEPTH_SHOP.DIALOG,text_typer);
-			shop._inst_page.text="{font 1}{instant true}{scale 2}{shadow false}{gui false}{depth "+string(DEPTH_SHOP.DIALOG)+"}{define `PAGE` `"+string(PAGE+1)+"`}"+Lang_GetString("shop.menu.page");
+			shop._inst_page.text="{font 1}{instant true}{scale 2}{gui false}{depth "+string(DEPTH_SHOP.DIALOG)+"}{define `PAGE` `"+string(PAGE+1)+"`}"+Lang_GetString("shop.menu.page");
 		}
 	}else{
 		if(instance_exists(shop._inst_page))instance_destroy(shop._inst_page);
@@ -290,7 +290,7 @@ function Shop_SetMenuTalk(PAGE){
 		var px=240+Lang_GetLayout("shop.dialog.base_x",0);
 		var py=420+Lang_GetLayout("shop.dialog.base_y",0);
 		shop._inst_page=instance_create_depth(px,py,DEPTH_SHOP.DIALOG,text_typer);
-		shop._inst_page.text="{font 1}{instant true}{scale 2}{shadow false}{gui false}{depth "+string(DEPTH_SHOP.DIALOG)+"}{define `PAGE` `"+string(PAGE+1)+"`}"+Lang_GetString("shop.menu.page");
+		shop._inst_page.text="{font 1}{instant true}{scale 2}{gui false}{depth "+string(DEPTH_SHOP.DIALOG)+"}{define `PAGE` `"+string(PAGE+1)+"`}"+Lang_GetString("shop.menu.page");
 	}
 	return true;
 }

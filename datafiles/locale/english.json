@@ -58,7 +58,8 @@
       "dialog_overworld": 0,
       "dialog_battle": 0,
       "dialog_battle_enemy": 0,
-      "dialog_shop": 0
+      "dialog_shop": 0,
+      "dialog_gameover": 0
     }
   },
   "strings": [
