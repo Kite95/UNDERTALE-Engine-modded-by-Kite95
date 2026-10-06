@@ -6,6 +6,8 @@
   "shop.menu.choice.take": "Take",
   "shop.menu.choice.steal": "Steal",
   "shop.menu.choice.read": "Read",
+  "shop.menu.geno.steal": "{gold 50}* (You took {insert GOLD}G.)",
+  "shop.menu.geno.read": "* (There's a note.)\n* \"Don't come back.\"",
   "shop.menu.exit": "Exit",
   "shop.menu.page": "PAGE {insert PAGE}",
   "shop.menu.talk.new": " (NEW)",

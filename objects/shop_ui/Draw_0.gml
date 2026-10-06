@@ -47,4 +47,5 @@ if(Shop_GetState()==SHOP_STATE.MENU){
 		var Yt=278+shop._talk_choice*40;
 		draw_sprite_ext(spr_soul_small,0,38,Yt,2,2,0,c_white,1);
 	}
+	Shop_DrawListScrollbar();
 }

@@ -177,29 +177,49 @@ if(_state==BATTLE_STATE.MENU){
 	
 	//物品
 	if(_menu==BATTLE_MENU.ITEM){
-		//上/下
-		if(Input_IsPressed(INPUT.UP)){
-			var slot=Battle_GetMenuChoiceItem()-1;
-			if(slot>=0){
-				SFX_Play(snd_menu_switch,0,false);
-				Battle_SetMenuChoiceItem(slot);
-			}
-		}else if(Input_IsPressed(INPUT.DOWN)){
-			var slot=Battle_GetMenuChoiceItem()+1;
+		if(BATTLE_MENU_ITEM_LAYOUT_CURRENT==BATTLE_MENU_ITEM_LAYOUT.PAGE){
 			var items=Item_GetInventoryItems();
-			if(slot<items.GetCount()){
-				SFX_Play(snd_menu_switch,0,false);
-				Battle_SetMenuChoiceItem(slot);
+			var count=items.GetCount();
+			var slot=Battle_GetMenuChoiceItem();
+			var directed=Input_IsPressed(INPUT.UP)||Input_IsPressed(INPUT.DOWN)||Input_IsPressed(INPUT.LEFT)||Input_IsPressed(INPUT.RIGHT);
+			var next=Battle_StepItemPageChoice(slot,count);
+			if(directed){
+				if(next!=slot&&next>=0&&next<count){
+					SFX_Play(snd_menu_switch,0,false);
+					Battle_SetMenuChoiceItem(next);
+				}
+			}else if(Input_IsPressed(INPUT.CANCEL)){
+				Battle_SetMenu(BATTLE_MENU.BUTTON);
+			}else if(Input_IsPressed(INPUT.CONFIRM)){
+				SFX_Play(snd_menu_confirm,0,false);
+				Battle_EndMenu();
 			}
-		}else if(Input_IsPressed(INPUT.CANCEL)){
-			Battle_SetMenu(BATTLE_MENU.BUTTON);
-		}else if(Input_IsPressed(INPUT.CONFIRM)){
-			SFX_Play(snd_menu_confirm,0,false);
-			Battle_EndMenu();
+			var cell_now=Battle_GetMenuChoiceItem() mod 4;
+			battle_soul.x=battle_board.x-battle_board.left-5+40+256*(cell_now mod 2);
+			battle_soul.y=battle_board.y-battle_board.up-5+36+32*(cell_now div 2);
+		}else{
+			if(Input_IsPressed(INPUT.UP)){
+				var slot=Battle_GetMenuChoiceItem()-1;
+				if(slot>=0){
+					SFX_Play(snd_menu_switch,0,false);
+					Battle_SetMenuChoiceItem(slot);
+				}
+			}else if(Input_IsPressed(INPUT.DOWN)){
+				var slot=Battle_GetMenuChoiceItem()+1;
+				var items=Item_GetInventoryItems();
+				if(slot<items.GetCount()){
+					SFX_Play(snd_menu_switch,0,false);
+					Battle_SetMenuChoiceItem(slot);
+				}
+			}else if(Input_IsPressed(INPUT.CANCEL)){
+				Battle_SetMenu(BATTLE_MENU.BUTTON);
+			}else if(Input_IsPressed(INPUT.CONFIRM)){
+				SFX_Play(snd_menu_confirm,0,false);
+				Battle_EndMenu();
+			}
+			battle_soul.x=battle_board.x-battle_board.left-5+40;
+			battle_soul.y=battle_board.y-battle_board.up-5+36+32*(Battle_GetMenuChoiceItem()-_menu_choice_item_first);
 		}
-		
-		battle_soul.x=battle_board.x-battle_board.left-5+40;
-		battle_soul.y=battle_board.y-battle_board.up-5+36+32*(Battle_GetMenuChoiceItem()-_menu_choice_item_first);
 	}else
 	
 	//仁慈

@@ -1,7 +1,7 @@
 {
   "resourceType": "GMObject",
   "resourceVersion": "1.0",
-  "name": "gameover_anim",
+  "name": "soul_break",
   "spriteId": {
     "name": "spr_battle_soul_red",
     "path": "sprites/spr_battle_soul_red/spr_battle_soul_red.yy",

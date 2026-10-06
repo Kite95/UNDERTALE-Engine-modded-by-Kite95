@@ -6,6 +6,6 @@
   "isCompatibility": false,
   "parent": {
     "name": "SFX",
-    "path": "folders/Scripts/Audio/SFX.yy",
+    "path": "folders/Scripts/Sounds/SFX.yy",
   },
 }

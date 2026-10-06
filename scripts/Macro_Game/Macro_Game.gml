@@ -26,4 +26,7 @@ function Macro_Game() {
 	// true: treat Windows as mobile (touch overlay + official langs only)
 #macro GAME_MOBILE_PREVIEW false
 
+	// true: debugger hotkeys and overlays
+#macro GAME_DEBUG true
+
 }

@@ -1,19 +1,16 @@
 {
   "resourceType": "GMObject",
   "resourceVersion": "1.0",
-  "name": "battle_bullet_kill",
-  "spriteId": {
-    "name": "spr_default",
-    "path": "sprites/spr_default/spr_default.yy",
-  },
+  "name": "shop_host_test",
+  "spriteId": null,
   "solid": false,
   "visible": true,
   "managed": true,
   "spriteMaskId": null,
   "persistent": false,
   "parentObjectId": {
-    "name": "battle_bullet",
-    "path": "objects/battle_bullet/battle_bullet.yy",
+    "name": "shop_host",
+    "path": "objects/shop_host/shop_host.yy",
   },
   "physicsObject": false,
   "physicsSensor": false,
@@ -27,14 +24,11 @@
   "physicsStartAwake": true,
   "physicsKinematic": false,
   "physicsShapePoints": [],
-  "eventList": [
-    {"resourceType":"GMEvent","resourceVersion":"1.0","name":"","isDnD":false,"eventNum":0,"eventType":0,"collisionObjectId":null,},
-    {"resourceType":"GMEvent","resourceVersion":"1.0","name":"","isDnD":false,"eventNum":10,"eventType":7,"collisionObjectId":null,},
-  ],
+  "eventList": [],
   "properties": [],
   "overriddenProperties": [],
   "parent": {
-    "name": "Bullet",
-    "path": "folders/Objects/Battle/Bullet.yy",
+    "name": "Host",
+    "path": "folders/Objects/Shop/Host.yy",
   },
 }

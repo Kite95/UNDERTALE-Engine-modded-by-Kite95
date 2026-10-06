@@ -186,14 +186,14 @@ var i=0;
 repeat(4){
 	if(dpad_now[i]){
 		if(_dpad_held[i]){
-			Input_SetStateOverride(_dpad_input[i],INPUT_STATE.HELD);
+			Input_SetOverride(_dpad_input[i],INPUT_STATE.HELD);
 		}else{
-			Input_SetStateOverride(_dpad_input[i],INPUT_STATE.PRESSED);
+			Input_SetOverride(_dpad_input[i],INPUT_STATE.PRESSED);
 		}
 	}else if(_dpad_held[i]){
-		Input_SetStateOverride(_dpad_input[i],INPUT_STATE.RELEASED);
+		Input_SetOverride(_dpad_input[i],INPUT_STATE.RELEASED);
 	}else{
-		Input_RemoveStateOverride(_dpad_input[i]);
+		Input_RemoveOverride(_dpad_input[i]);
 	}
 	_dpad_held[i]=dpad_now[i];
 	i+=1;
@@ -203,14 +203,14 @@ i=0;
 repeat(btn_n){
 	if(btn_now[i]){
 		if(_btn_held[i]){
-			Input_SetStateOverride(_btn_input[i],INPUT_STATE.HELD);
+			Input_SetOverride(_btn_input[i],INPUT_STATE.HELD);
 		}else{
-			Input_SetStateOverride(_btn_input[i],INPUT_STATE.PRESSED);
+			Input_SetOverride(_btn_input[i],INPUT_STATE.PRESSED);
 		}
 	}else if(_btn_held[i]){
-		Input_SetStateOverride(_btn_input[i],INPUT_STATE.RELEASED);
+		Input_SetOverride(_btn_input[i],INPUT_STATE.RELEASED);
 	}else{
-		Input_RemoveStateOverride(_btn_input[i]);
+		Input_RemoveOverride(_btn_input[i]);
 	}
 	_btn_held[i]=btn_now[i];
 	i+=1;

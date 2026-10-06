@@ -23,8 +23,11 @@ function Debugger_ListDrawHeader(){
 
 	var col=merge_colour(base,c_white,0.5);
 	var shd=1*SCALE;
+	var prev=draw_get_alpha();
+	draw_set_alpha(0.9);
 	draw_set_color(c_black);
 	draw_text_transformed(X+shd,Y+shd,text,SCALE,SCALE,0);
 	draw_set_color(col);
 	draw_text_transformed(X,Y,text,SCALE,SCALE,0);
+	draw_set_alpha(prev);
 }

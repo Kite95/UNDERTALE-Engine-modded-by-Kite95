@@ -2,10 +2,15 @@ var z=Storage_GetTempGeneral();
 var sx=z.Get(FLAG_TEMP_GAMEOVER_SOUL_X,320);
 var sy=z.Get(FLAG_TEMP_GAMEOVER_SOUL_Y,240);
 
-instance_create_depth(sx,sy,0,gameover_anim);
+for(var i=0;i<6;i+=1){
+	BGM_Stop(i);
+}
+audio_stop_all();
 
-_inst=noone;
-_phase=0;
+var inst=instance_create_depth(sx,sy,0,soul_break);
+alarm[0]=inst.time;
+
+_inst_text=noone;
 _bg_alpha=0;
 
 if(instance_exists(fader)){

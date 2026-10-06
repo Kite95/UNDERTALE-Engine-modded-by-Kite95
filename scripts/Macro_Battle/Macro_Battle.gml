@@ -32,6 +32,14 @@ function Macro_Battle() {
 		FLEE
 	};
 
+	enum BATTLE_MENU_ITEM_LAYOUT{
+		VERTICAL,
+		PAGE
+	};
+
+	//VERTICAL: one column, window follows the cursor. PAGE: left/right turns pages.
+	#macro BATTLE_MENU_ITEM_LAYOUT_CURRENT BATTLE_MENU_ITEM_LAYOUT.PAGE
+
 	enum BATTLE_ENEMY_EVENT{
 		INIT,
 		BATTLE_START,

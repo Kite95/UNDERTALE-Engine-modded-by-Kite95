@@ -25,12 +25,20 @@ function ItemType() constructor{
 
 // ItemTypeSimple base receives a name localization key.
 // It automatically sets up GetName to show the localized name "item.key.name"
-// and OnInfo to show the localized dialog "item.key.info"
+// and OnInfo to show the localized dialog "item.key.info".
+// In battle, GetName uses "item.key.name.short" when that string exists.
 function ItemTypeSimple(keyId) : ItemType() constructor{
 	self.nameKey="item."+string(keyId)+".name";
+	self.nameShortKey="item."+string(keyId)+".name.short";
 	self.infoTextKey="item."+string(keyId)+".info"
 	
 	function GetName(){
+		if(Player_IsInBattle()){
+			var short_name=Lang_GetString(nameShortKey,"");
+			if(short_name!=""){
+				return short_name;
+			}
+		}
 		return Lang_GetString(nameKey,nameKey);
 	}
 	function OnInfo(inventory,index){

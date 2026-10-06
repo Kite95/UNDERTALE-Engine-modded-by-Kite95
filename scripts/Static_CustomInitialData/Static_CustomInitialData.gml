@@ -26,6 +26,12 @@ function Static_CustomInitialData(){
 	items.Clear();
 	items.Add(ITEM_TOY_KNIFE);
 	items.Add(ITEM_FADED_RIBBON);
+	items.Add(ITEM_STICK);
+	items.Add(ITEM_STICK);
+	items.Add(ITEM_FADED_RIBBON);
+	items.Add(ITEM_STICK);
+	items.Add(ITEM_FADED_RIBBON);
+	items.Add(ITEM_STICK);
 
 	var phones=Item_GetInventoryPhones();
 	phones.Clear();

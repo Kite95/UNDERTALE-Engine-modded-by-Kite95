@@ -32,6 +32,6 @@
   "overriddenProperties": [],
   "parent": {
     "name": "Hint",
-    "path": "folders/Objects/Hint.yy",
+    "path": "folders/Objects/Dev/Hint.yy",
   },
 }

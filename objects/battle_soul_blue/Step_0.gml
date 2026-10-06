@@ -116,7 +116,7 @@ if(Battle_GetState()==BATTLE_STATE.IN_TURN && moveable){
 	if(jump_state = 1){
 		if(Input_IsReleased(jump_input)){
 			jump_state = 2;
-			move = -1;
+			move = -2;
 		}
 		if(move >= 0){
 			jump_state = 2;

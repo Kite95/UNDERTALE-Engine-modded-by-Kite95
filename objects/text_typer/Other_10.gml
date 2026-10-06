@@ -102,7 +102,7 @@ if(_char!=" "&&_char!="　"){
 					shift=-max_x;
 					break;
 				default:
-					shift=-min_x;
+					shift=0;
 					break;
 			}
 			var proc2=0;

@@ -1,9 +1,7 @@
-if(_phase==1&&!instance_exists(_inst)){
-	_phase=2;
-}else if(_phase==2){
+if(_inst_text!=noone&&!instance_exists(_inst_text)){
 	if(Input_IsPressed(INPUT.CONFIRM)){
-		_phase=3;
+		_inst_text=noone;
 		Fader_Fade(0,1,50);
-		alarm[4]=50;
+		alarm[2]=50;
 	}
 }

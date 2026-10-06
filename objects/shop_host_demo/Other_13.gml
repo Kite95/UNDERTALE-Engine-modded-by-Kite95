@@ -10,7 +10,7 @@ if(Shop_GetNextMenu()==SHOP_MENU.SELL){
 	}
 }
 
-// Geno steal (main slot 1): only once; gold via {gold} in shop.demo.steal
+// Geno steal (main slot 1): only once; gold via {gold} in shop.menu.geno.steal
 if(_geno&&Shop_GetNextMenu()==SHOP_MENU.MENU&&shop._menu_choice==1){
 	var steal_key=Shop_GetHostShortName()+"_steal";
 	if(Plot_Get(steal_key,0)==0){

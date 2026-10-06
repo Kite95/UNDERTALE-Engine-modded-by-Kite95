@@ -30,7 +30,7 @@
   "properties": [],
   "overriddenProperties": [],
   "parent": {
-    "name": "Debugger",
-    "path": "folders/Objects/Debugger.yy",
+    "name": "Debug",
+    "path": "folders/Objects/Dev/Debug.yy",
   },
 }

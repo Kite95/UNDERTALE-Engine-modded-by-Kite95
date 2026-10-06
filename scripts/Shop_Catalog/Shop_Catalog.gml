@@ -14,10 +14,10 @@ function Shop_GetHostShortName(){
 }
 
 ///@arg index
-function Shop_GetBuyEntry(index){
+function Shop_GetBuyEntry(INDEX){
 	if(!instance_exists(shop))return undefined;
-	if(index<0||index>=array_length(shop._buy_list))return undefined;
-	return shop._buy_list[index];
+	if(INDEX<0||INDEX>=array_length(shop._buy_list))return undefined;
+	return shop._buy_list[INDEX];
 }
 
 /// Load stock from static if key exists (after AddBuy / SetBuy).
@@ -62,17 +62,17 @@ function Shop_SaveBuyStock(index){
 ///@arg stock*  remaining count (default 1); -1 = infinite
 ///@arg display_name*  override item name shown (default "" uses real item name)
 function Shop_AddBuy(){
-	var item_id=argument[0];
-	var price=argument[1];
-	var desc="";
-	var state=SHOP_SLOT.OPEN;
-	var stock=1;
-	var display_name="";
-	if(argument_count>=3)desc=argument[2];
-	if(argument_count>=4)state=argument[3];
-	if(argument_count>=5)stock=argument[4];
-	if(argument_count>=6)display_name=argument[5];
-	return Shop_SetBuy(Shop_GetBuyNumber(),item_id,price,desc,state,stock,display_name);
+	var ITEM_ID=argument[0];
+	var PRICE=argument[1];
+	var DESC="";
+	var STATE=SHOP_SLOT.OPEN;
+	var STOCK=1;
+	var DISPLAY_NAME="";
+	if(argument_count>=3)DESC=argument[2];
+	if(argument_count>=4)STATE=argument[3];
+	if(argument_count>=5)STOCK=argument[4];
+	if(argument_count>=6)DISPLAY_NAME=argument[5];
+	return Shop_SetBuy(Shop_GetBuyNumber(),ITEM_ID,PRICE,DESC,STATE,STOCK,DISPLAY_NAME);
 }
 
 /// Replace buy-list entry at index (or append if index==length).
@@ -84,36 +84,36 @@ function Shop_AddBuy(){
 ///@arg stock*  remaining count (default 1); -1 = infinite
 ///@arg display_name*  override item name shown (default "" uses real item name)
 function Shop_SetBuy(){
-	var index=argument[0];
-	var item_id=argument[1];
-	var price=argument[2];
-	var desc="";
-	var state=SHOP_SLOT.OPEN;
-	var stock=1;
-	var display_name="";
-	if(argument_count>=4)desc=argument[3];
-	if(argument_count>=5)state=argument[4];
-	if(argument_count>=6)stock=argument[5];
-	if(argument_count>=7)display_name=argument[6];
+	var INDEX=argument[0];
+	var ITEM_ID=argument[1];
+	var PRICE=argument[2];
+	var DESC="";
+	var STATE=SHOP_SLOT.OPEN;
+	var STOCK=1;
+	var DISPLAY_NAME="";
+	if(argument_count>=4)DESC=argument[3];
+	if(argument_count>=5)STATE=argument[4];
+	if(argument_count>=6)STOCK=argument[5];
+	if(argument_count>=7)DISPLAY_NAME=argument[6];
 	if(!instance_exists(shop))return false;
 	var n=array_length(shop._buy_list);
-	if(index<0||index>n)return false;
-	if(stock<-1)stock=-1;
+	if(INDEX<0||INDEX>n)return false;
+	if(STOCK<-1)STOCK=-1;
 	var entry={
-		item_id:item_id,
-		price:price,
-		desc:desc,
-		state:state,
-		stock:stock
+		item_id:ITEM_ID,
+		price:PRICE,
+		desc:DESC,
+		state:STATE,
+		stock:STOCK
 	};
-	if(display_name!="")entry.display_name=display_name;
-	if(stock==0)entry.state=SHOP_SLOT.SOLD_OUT;
-	if(index==n){
+	if(DISPLAY_NAME!="")entry.display_name=DISPLAY_NAME;
+	if(STOCK==0)entry.state=SHOP_SLOT.SOLD_OUT;
+	if(INDEX==n){
 		array_push(shop._buy_list,entry);
 	}else{
-		shop._buy_list[index]=entry;
+		shop._buy_list[INDEX]=entry;
 	}
-	Shop_LoadBuyStock(index);
+	Shop_LoadBuyStock(INDEX);
 	return true;
 }
 
@@ -164,44 +164,47 @@ function Shop_GetBuyNumber(){
 }
 
 function Shop_GetBuyPageMax(){
-	return max(1,ceil(Shop_GetBuyNumber()/4));
+	return max(1,ceil(Shop_GetListShown(Shop_GetBuyNumber())/4));
 }
 
 function Shop_GetBuyChoice(){
 	if(!instance_exists(shop))return -1;
+	if(SHOP_MENU_LIST_LAYOUT_CURRENT==SHOP_MENU_LIST_LAYOUT.VERTICAL){
+		return shop._page_buy+shop._buy_choice;
+	}
 	return shop._page_buy*4+shop._buy_choice;
 }
 
 ///@arg index
-function Shop_GetBuyName(index){
-	var e=Shop_GetBuyEntry(index);
+function Shop_GetBuyName(INDEX){
+	var e=Shop_GetBuyEntry(INDEX);
 	if(is_undefined(e))return "";
 	if(variable_struct_exists(e,"display_name"))return e.display_name;
 	return Item_GetTypeManager().GetNameOrFallback(e.item_id);
 }
 
 ///@arg index
-function Shop_GetBuyPrice(index){
-	var e=Shop_GetBuyEntry(index);
+function Shop_GetBuyPrice(INDEX){
+	var e=Shop_GetBuyEntry(INDEX);
 	return is_undefined(e) ? 0 : e.price;
 }
 
 ///@arg index
-function Shop_GetBuyDesc(index){
-	var e=Shop_GetBuyEntry(index);
+function Shop_GetBuyDesc(INDEX){
+	var e=Shop_GetBuyEntry(INDEX);
 	return is_undefined(e) ? "" : e.desc;
 }
 
 ///@arg index
-function Shop_GetSlotState(index){
-	var e=Shop_GetBuyEntry(index);
+function Shop_GetSlotState(INDEX){
+	var e=Shop_GetBuyEntry(INDEX);
 	return is_undefined(e) ? SHOP_SLOT.LOCKED : e.state;
 }
 
 /// Remaining stock; -1 = infinite. Missing field defaults to 1.
 ///@arg index
-function Shop_GetBuyStock(index){
-	var e=Shop_GetBuyEntry(index);
+function Shop_GetBuyStock(INDEX){
+	var e=Shop_GetBuyEntry(INDEX);
 	if(is_undefined(e))return 1;
 	if(!variable_struct_exists(e,"stock"))return 1;
 	return e.stock;
@@ -209,35 +212,35 @@ function Shop_GetBuyStock(index){
 
 /// True only for OPEN (not LOCKED / SOLD_OUT).
 ///@arg index
-function Shop_IsSlotOpen(index){
-	return Shop_GetSlotState(index)==SHOP_SLOT.OPEN;
+function Shop_IsSlotOpen(INDEX){
+	return Shop_GetSlotState(INDEX)==SHOP_SLOT.OPEN;
 }
 
 ///@arg name
 ///@arg dialog*  string, or array of stage strings
 ///@arg flag_key*  static key; default {hostShortName}_talk_{talkIndex}
 function Shop_AddTalk(){
-	var name=argument[0];
-	var dialog="";
-	var flag_key="";
-	if(argument_count>=2)dialog=argument[1];
-	if(argument_count>=3)flag_key=argument[2];
+	var NAME=argument[0];
+	var DIALOG="";
+	var FLAG_KEY="";
+	if(argument_count>=2)DIALOG=argument[1];
+	if(argument_count>=3)FLAG_KEY=argument[2];
 	if(!instance_exists(shop))return false;
 
 	var dialogs=[];
-	if(is_array(dialog)){
-		dialogs=dialog;
-	}else if(is_string(dialog)&&dialog!=""){
-		dialogs=[dialog];
+	if(is_array(DIALOG)){
+		dialogs=DIALOG;
+	}else if(is_string(DIALOG)&&DIALOG!=""){
+		dialogs=[DIALOG];
 	}
 
 	var index=array_length(shop._talk_list);
-	if(flag_key=="")flag_key=Shop_GetHostShortName()+"_talk_"+string(index);
+	if(FLAG_KEY=="")FLAG_KEY=Shop_GetHostShortName()+"_talk_"+string(index);
 
 	array_push(shop._talk_list,{
-		name:name,
+		name:NAME,
 		dialogs:dialogs,
-		flag_key:flag_key
+		flag_key:FLAG_KEY
 	});
 	return true;
 }
@@ -247,11 +250,14 @@ function Shop_GetTalkNumber(){
 }
 
 function Shop_GetTalkPageMax(){
-	return max(1,ceil(Shop_GetTalkNumber()/4));
+	return max(1,ceil(Shop_GetListShown(Shop_GetTalkNumber())/4));
 }
 
 function Shop_GetTalkChoice(){
 	if(!instance_exists(shop))return -1;
+	if(SHOP_MENU_LIST_LAYOUT_CURRENT==SHOP_MENU_LIST_LAYOUT.VERTICAL){
+		return shop._page_talk+shop._talk_choice;
+	}
 	return shop._page_talk*4+shop._talk_choice;
 }
 
@@ -365,11 +371,20 @@ function Shop_GetSellRefuseText(){
 	return Lang_GetString("shop.menu.sell.refuse");
 }
 
+/// Single-digit prices get a leading 0 so list columns line up.
+///@arg price
+function Shop_FormatPrice(){
+	var PRICE=argument[0];
+	var text=string(PRICE);
+	if(PRICE>=0&&PRICE<10)text="0"+text;
+	return text;
+}
+
 ///@arg item_id
-function Shop_GetSellPriceLabel(item_id){
-	var p=Shop_GetItemSellPrice(item_id);
+function Shop_GetSellPriceLabel(ITEM_ID){
+	var p=Shop_GetItemSellPrice(ITEM_ID);
 	if(p<=0)return Shop_GetSellRefuseText()+"G";
-	return string(p)+"G";
+	return Shop_FormatPrice(p)+"G";
 }
 
 ///@arg index  buy-list index

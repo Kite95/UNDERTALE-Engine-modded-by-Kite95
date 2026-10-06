@@ -6,6 +6,6 @@
   "isCompatibility": false,
   "parent": {
     "name": "Typer",
-    "path": "folders/Scripts/GMU/Typer.yy",
+    "path": "folders/Scripts/Typer.yy",
   },
 }

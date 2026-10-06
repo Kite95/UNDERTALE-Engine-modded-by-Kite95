@@ -32,6 +32,6 @@
   "overriddenProperties": [],
   "parent": {
     "name": "Face",
-    "path": "folders/Objects/Face.yy",
+    "path": "folders/Objects/Text/Face.yy",
   },
 }

@@ -1,5 +1,5 @@
 ///@arg input
-function Input_RemoveStateOverride() {
+function Input_RemoveOverride() {
 	var INPUT=argument[0];
 
 	var map=global._gmu_input_state_override;

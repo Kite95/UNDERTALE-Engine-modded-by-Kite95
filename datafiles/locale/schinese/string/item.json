@@ -12,15 +12,18 @@
     "item.drop.4": "* 你丢弃了 {insert ITEM}。",
 
     "item.stick.name": "树枝",
+    "item.stick.name.short": "树枝",
     "item.stick.info": "* “树枝”- 武器 AT 0\n* 小树叉吐不出橡芽。",
     "item.stick.use": "* 你扔出了树枝。{sleep 20}\n* 然后自己把它捡了回来。",
 
     "item.bandage.name": "绷带",
+    "item.bandage.name.short": "绷带",
     "item.bandage.info": "* “绷带”- 治愈 10 HP\n* 看起来已经被用过很多次了。",
     "item.bandage.use.0": "* 你重新敷上了绷带。",
     "item.bandage.use.1": "* 还是有点粘粘的。",
 
     "item.toy_knife.name": "玩具刀",
+    "item.toy_knife.name.short": "玩具刀",
     "item.toy_knife.info": "* “玩具刀”- 武器 AT 3\n* 塑料制品。\n* 如今很罕见了。",
 
     "item.faded_ribbon.name": "褪色缎带",

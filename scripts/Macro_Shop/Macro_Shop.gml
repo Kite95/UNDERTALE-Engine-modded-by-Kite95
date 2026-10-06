@@ -64,4 +64,15 @@ function Macro_Shop() {
 		DIALOG_START,
 		DIALOG_END
 	};
+
+	enum SHOP_MENU_LIST_LAYOUT{
+		VERTICAL,
+		PAGE
+	};
+
+	//VERTICAL: window follows the cursor and stops at the ends. PAGE: left/right turns pages.
+	#macro SHOP_MENU_LIST_LAYOUT_CURRENT SHOP_MENU_LIST_LAYOUT.PAGE
+
+	//Buy and talk lists show at most four pages.
+	#macro SHOP_MENU_LIST_PAGE_MAX 4
 }

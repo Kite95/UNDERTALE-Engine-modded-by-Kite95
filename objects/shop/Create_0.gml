@@ -3,7 +3,7 @@ _shop_id=temp.Get(FLAG_TEMP_SHOP,0);
 _host_object=Shop_GetHost(_shop_id);
 _host_inst=noone;
 
-_menu_dialog=Shop_GetMenuDialogFromShopCustom(_shop_id);
+_menu_dialog=Shop_GetRegisteredMenuDialog(_shop_id);
 _right_dialog="";
 _itemdesc_dialog="";
 
@@ -34,7 +34,7 @@ _dialog_auto_end=true;
 _dialog_pending=false;
 
 _buy_free=false;
-_main_action=[SHOP_MAIN_ACTION.BUY,SHOP_MAIN_ACTION.SELL,SHOP_MAIN_ACTION.TALK,SHOP_MAIN_ACTION.EXIT];
+_main_action=[SHOP_MAIN_ACTION.BUY,SHOP_MAIN_ACTION.DIALOG,SHOP_MAIN_ACTION.TALK,SHOP_MAIN_ACTION.EXIT];
 _main_label=["","","",""];
 _main_free=[false,false,false,false];
 _main_dialog=["","","",""];

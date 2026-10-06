@@ -1,54 +1,81 @@
-if(feedback_time>0){
-	feedback_time-=delta_time/1000000;
-	if(feedback_time<0){
-		feedback_time=0;
-		feedback="";
-	}
-}
-
-if(!global.debug){
-	armed=false;
-	charge=0;
-	cur_key="";
+if(!GAME_DEBUG){
+	_clear_chord();
 	exit;
 }
 
 if(instance_exists(debugger_list)){
-	armed=false;
-	charge=0;
-	cur_key="";
+	_clear_chord();
 	exit;
 }
 
-if(keyboard_check(vk_tab)){
-	armed=true;
-}else{
-	armed=false;
-	charge=0;
-	cur_key="";
+if(!keyboard_check(vk_tab)){
+	_clear_chord();
 	exit;
 }
 
-var k="";
-if(keyboard_key!=vk_tab&&keyboard_key>0){
-	var ch=chr(keyboard_key);
-	if(string_length(ch)==1){
-		var code=ord(ch);
-		// printable ASCII, no space
-		if(code>=33&&code<=126){
-			k=string_lower(ch);
+_armed=true;
+_tip="";
+alarm[0]=-1;
+
+var held_code=[];
+var held_label=[];
+var held_n=0;
+var key_n=array_length(_key_code);
+for(var i=0;i<key_n;i+=1){
+	if(keyboard_check_direct(_key_code[i])){
+		held_code[held_n]=_key_code[i];
+		held_label[held_n]=_key_label[i];
+		held_n+=1;
+	}
+}
+
+var next=[];
+var prev_n=array_length(_chord_keys);
+for(var i=0;i<prev_n;i+=1){
+	if(array_length(next)>=2){
+		break;
+	}
+	var prev=_chord_keys[i];
+	for(var j=0;j<held_n;j+=1){
+		if(held_code[j]==prev.code){
+			array_push(next,prev);
+			break;
 		}
 	}
 }
-cur_key=k;
+for(var i=0;i<held_n;i+=1){
+	if(array_length(next)>=2){
+		break;
+	}
+	var found=false;
+	var next_n=array_length(next);
+	for(var j=0;j<next_n;j+=1){
+		if(next[j].code==held_code[i]){
+			found=true;
+			break;
+		}
+	}
+	if(!found){
+		array_push(next,{
+			code:held_code[i],
+			label:held_label[i]
+		});
+	}
+}
+_chord_keys=next;
 
-if(k==""||!variable_struct_exists(commands,k)){
-	charge=0;
+_cur_key="";
+if(array_length(_chord_keys)==1){
+	_cur_key=string_lower(_chord_keys[0].label);
+}
+
+if(_cur_key==""||!variable_struct_exists(_commands,_cur_key)){
+	_charge=0;
 	exit;
 }
 
-var cmd=commands[$ k];
-var hold_need=hold_default;
+var cmd=_commands[$ _cur_key];
+var hold_need=_hold;
 if(variable_struct_exists(cmd,"hold")){
 	hold_need=cmd.hold;
 }
@@ -56,17 +83,30 @@ if(hold_need<=0){
 	hold_need=0.01;
 }
 
-charge+=delta_time/1000000;
-if(charge>=hold_need){
-	cmd.run();
-	var tip=cmd.name;
-	if(variable_struct_exists(cmd,"tip")&&is_method(cmd.tip)){
-		tip=cmd.tip();
+_charge+=delta_time/1000000;
+if(_charge>=hold_need){
+	if(variable_struct_exists(cmd,"run")&&is_method(cmd.run)){
+		cmd.run();
 	}
-	feedback=tip;
-	feedback_time=feedback_duration;
-	charge=0;
-	cur_key="";
-	armed=false;
+	var text=cmd.name;
+	if(variable_struct_exists(cmd,"tip")&&is_method(cmd.tip)){
+		text=cmd.tip();
+	}
+	var hold=0;
+	var fade=20;
+	if(variable_struct_exists(cmd,"time")){
+		hold=cmd.time;
+		if(is_method(hold)){
+			hold=hold();
+		}
+	}
+	if(variable_struct_exists(cmd,"fade")){
+		fade=cmd.fade;
+		if(is_method(fade)){
+			fade=fade();
+		}
+	}
+	_show_tip(text,hold,fade);
+	_clear_chord();
 	keyboard_clear(vk_tab);
 }

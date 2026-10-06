@@ -3,14 +3,14 @@
 /// Category header colors (merged with white when drawn).
 function Debugger_ListCategoryColors(){
 	return {
-		System: c_ltgray,
-		Area: c_aqua,
-		Backlog: c_purple,
-		Test: c_yellow,
-		Other: c_white,
-		Single: c_lime,
-		"Party!": c_fuchsia,
-		Boss: c_red,
+		"SYSTEM": c_ltgray,
+		"AREA": c_aqua,
+		"BACKLOG": c_purple,
+		"TEST": c_yellow,
+		"OTHER": c_white,
+		"SINGLE": c_lime,
+		"PARTY!": c_fuchsia,
+		"BOSS": c_red,
 	};
 }
 
@@ -25,19 +25,19 @@ function Debugger_ListCategoryColor(_name){
 // Room: [category, room_name_prefix] — more specific prefixes first.
 function Debugger_ListRoomCategoryDefs(){
 	return [
-		["Area","room_area"],
-		["System","room_init"],
-		["System","room_logo"],
-		["System","room_menu"],
-		["System","room_settings"],
-		["System","room_shop"],
-		["System","room_battle"],
-		["System","room_gameover"],
+		["AREA","room_area"],
+		["SYSTEM","room_init"],
+		["SYSTEM","room_logo"],
+		["SYSTEM","room_menu"],
+		["SYSTEM","room_settings"],
+		["SYSTEM","room_shop"],
+		["SYSTEM","room_battle"],
+		["SYSTEM","room_gameover"],
 	];
 }
 
 function Debugger_ListRoomCategoryOrder(){
-	return ["System","Area","Backlog","Test","Other"];
+	return ["SYSTEM","AREA","BACKLOG","TEST","OTHER"];
 }
 
 function Debugger_ListClassifyRoom(_room){
@@ -49,25 +49,25 @@ function Debugger_ListClassifyRoom(_room){
 			return def[0];
 		}
 	}
-	return "Other";
+	return "OTHER";
 }
 
 // Encounter: [category, id_min, id_max] inclusive.
 function Debugger_ListEncounterCategoryDefs(){
 	return [
-		["Single",1,9],
-		["Party!",10,19],
-		["Boss",20,999999],
+		["SINGLE",1,9],
+		["PARTY!",10,19],
+		["BOSS",20,999999],
 	];
 }
 
 function Debugger_ListEncounterCategoryOrder(){
-	return ["Single","Party!","Boss","Other"];
+	return ["SINGLE","PARTY!","BOSS","OTHER"];
 }
 
 function Debugger_ListClassifyEncounter(_eid){
 	if(_eid<=0){
-		return "Other";
+		return "OTHER";
 	}
 	var defs=Debugger_ListEncounterCategoryDefs();
 	for(var i=0;i<array_length(defs);i++){
@@ -76,7 +76,7 @@ function Debugger_ListClassifyEncounter(_eid){
 			return def[0];
 		}
 	}
-	return "Other";
+	return "OTHER";
 }
 
 function Debugger_ListEncounterItemLabel(_eid){
@@ -277,24 +277,33 @@ function Debugger_ListIsSearchKeyBlacklisted(_key){
 	return false;
 }
 
+function Debugger_ListLineFull(){
+	draw_set_font(Lang_GetFont("determination_sans",font_mars_needs_cunnilingus));
+	return string_height("A")+2;
+}
+
+function Debugger_ListSearchLabel(){
+	return "Search...";
+}
+
 ///@arg inst
 function Debugger_ListResetNav(_inst){
-	if(array_length(_inst.rows)<=0){
-		_inst.selection=0;
-		_inst.scroll_target=0;
-		_inst.scroll=0;
-		_inst.sel_y=0;
+	if(array_length(_inst._rows)<=0){
+		_inst._selection=0;
+		_inst._scroll_target=0;
+		_inst._scroll=0;
+		_inst._sel_y=0;
 		return;
 	}
-	while(_inst.selection<array_length(_inst.rows)&&_inst.rows[_inst.selection].kind!="item"){
-		_inst.selection+=1;
+	while(_inst._selection<array_length(_inst._rows)&&_inst._rows[_inst._selection].kind!="item"){
+		_inst._selection+=1;
 	}
-	if(_inst.selection>=array_length(_inst.rows)){
-		_inst.selection=Debugger_ListFindFirstItem(_inst.rows);
+	if(_inst._selection>=array_length(_inst._rows)){
+		_inst._selection=Debugger_ListFindFirstItem(_inst._rows);
 	}
-	_inst.scroll_target=0;
-	_inst.scroll=0;
-	_inst.sel_y=0;
+	_inst._scroll_target=0;
+	_inst._scroll=0;
+	_inst._sel_y=0;
 }
 
 ///@arg inst
@@ -302,52 +311,48 @@ function Debugger_ListApplySearchFilter(_inst){
 	if(!_inst.search_enabled){
 		return;
 	}
-	_inst.rows=Debugger_ListFilterRows(_inst.rows_all,_inst.search_input);
-	_inst.selection=Debugger_ListFindFirstItem(_inst.rows);
+	_inst._rows=Debugger_ListFilterRows(_inst._rows_all,_inst._search_input);
+	_inst._selection=Debugger_ListFindFirstItem(_inst._rows);
 	Debugger_ListResetNav(_inst);
-	_inst.layout_dirty=true;
+	_inst._layout_dirty=true;
 }
 
 ///@arg inst @arg built
 function Debugger_ListApplyBuilt(_inst,_built){
-	_inst.rows_all=_built.rows;
-	_inst.rows=_built.rows;
-	_inst.selection=_built.selection;
-	if(array_length(_inst.rows)<=0){
+	_inst._rows_all=_built.rows;
+	_inst._rows=_built.rows;
+	_inst._selection=_built.selection;
+	if(array_length(_inst._rows)<=0){
 		instance_destroy(_inst);
 		exit;
 	}
 	Debugger_ListResetNav(_inst);
-	_inst.layout_dirty=true;
-	if(_inst.selection>0){
-		_inst.scroll_target=max(0,_inst.selection-floor(_inst.visible_rows/2));
-		_inst.scroll=_inst.scroll_target;
-		var f=Lang_GetFont("determination_mono",font_mars_needs_cunnilingus);
-		draw_set_font(f);
-		_inst.sel_y=(_inst.selection-_inst.scroll)*(string_height("A")+4);
+	_inst._layout_dirty=true;
+	if(_inst._selection>0){
+		_inst._scroll_target=max(0,_inst._selection-floor(_inst._visible_rows/2));
+		_inst._scroll=_inst._scroll_target;
+		_inst._sel_y=(_inst._selection-_inst._scroll)*Debugger_ListLineFull();
 	}
 }
 
 ///@arg inst
 function Debugger_ListUpdateLayout(_inst){
 	var gui_h=display_get_gui_height();
-	if(!_inst.layout_dirty&&_inst._layout_gui_h==gui_h&&_inst.layout_panel_w>0){
+	if(!_inst._layout_dirty&&_inst._layout_gui_h==gui_h&&_inst._layout_panel_w>0){
 		return;
 	}
-	var f=Lang_GetFont("determination_mono",font_mars_needs_cunnilingus);
-	draw_set_font(f);
 	var scale=1;
 	var pad_l=10;
-	var pad_r=20;
+	var pad_r=12;
 	var item_indent=12;
-	var line_full=string_height("A")+4;
+	var line_full=Debugger_ListLineFull();
 	var line_h=line_full*scale;
-	var count=array_length(_inst.rows);
-	var title=_inst.search_enabled?"Search":_inst.title_text;
+	var count=array_length(_inst._rows);
+	var title=_inst.search_enabled?Debugger_ListSearchLabel():_inst.title_text;
 	var max_tw=string_width(title);
 	var item_rows=0;
-	for(var i=0;i<count;i++){
-		var row=_inst.rows[i];
+	for(var i=0;i<count;i+=1){
+		var row=_inst._rows[i];
 		var sample="";
 		if(row.kind=="item"){
 			sample=row.label;
@@ -359,32 +364,34 @@ function Debugger_ListUpdateLayout(_inst){
 		}
 	}
 	if(_inst.search_enabled&&item_rows==0){
-		var q=_inst.search_input;
+		var q=_inst._search_input;
 		if(string_length(q)==0){
-			q="Search";
+			q=Debugger_ListSearchLabel();
 		}
-		max_tw=max(string_width("Search"),item_indent+string_width(q)+8);
+		max_tw=max(string_width(Debugger_ListSearchLabel()),item_indent+string_width(q)+8);
 	}
 	var gui_w=display_get_gui_width();
+	var search_tw=ceil(string_width(Debugger_ListSearchLabel())*scale);
+	var panel_min_w=pad_l+pad_r+item_indent+search_tw+item_indent;
 	var searchbar_top=6;
 	var search_bar_h=line_full+4;
 	var header_h=_inst.search_enabled?searchbar_top+search_bar_h+4:line_h+8;
 	var list_top=header_h;
 	var panel_bottom=gui_h;
 	var list_h=max(1,panel_bottom-list_top);
-	_inst.layout_panel_w=min(gui_w,ceil(max_tw*scale)+pad_l+pad_r);
-	_inst.layout_list_top=list_top;
-	_inst.layout_line_full=line_full;
-	_inst.layout_line_h=line_h;
-	_inst.layout_pad_l=pad_l;
-	_inst.layout_pad_r=pad_r;
-	_inst.layout_item_indent=item_indent;
-	_inst.layout_search_bar_h=search_bar_h;
-	_inst.layout_searchbar_top=searchbar_top;
-	_inst.layout_scale=scale;
-	_inst.visible_rows=max(1,floor(list_h/line_h));
+	_inst._layout_panel_w=min(gui_w,max(panel_min_w,ceil(max_tw*scale)+pad_l+pad_r));
+	_inst._layout_list_top=list_top;
+	_inst._layout_line_full=line_full;
+	_inst._layout_line_h=line_h;
+	_inst._layout_pad_l=pad_l;
+	_inst._layout_pad_r=pad_r;
+	_inst._layout_item_indent=item_indent;
+	_inst._layout_search_bar_h=search_bar_h;
+	_inst._layout_searchbar_top=searchbar_top;
+	_inst._layout_scale=scale;
+	_inst._visible_rows=max(1,floor(list_h/line_h));
 	_inst._layout_gui_h=gui_h;
-	_inst.layout_dirty=false;
+	_inst._layout_dirty=false;
 }
 
 ///@arg inst
@@ -393,104 +400,104 @@ function Debugger_ListStepSearch(_inst){
 	if(!_inst.search_enabled){
 		return false;
 	}
-	var count=array_length(_inst.rows);
-	if(_inst.search_mode){
-		_inst.scroll=lerp(_inst.scroll,0,0.3);
-		_inst.scroll_target=0;
-		_inst.sel_y=lerp(_inst.sel_y,0,0.35);
+	var count=array_length(_inst._rows);
+	if(_inst._search_mode){
+		_inst._scroll=lerp(_inst._scroll,0,0.3);
+		_inst._scroll_target=0;
+		_inst._sel_y=lerp(_inst._sel_y,0,0.35);
 
 		if(keyboard_check_pressed(vk_down)||keyboard_check_pressed(vk_enter)){
-			_inst.search_mode=false;
-			_inst.search_repeat_key=-1;
-			count=array_length(_inst.rows);
+			_inst._search_mode=false;
+			_inst._search_repeat_key=-1;
+			count=array_length(_inst._rows);
 			if(count>0){
-				_inst.selection=Debugger_ListFindFirstItem(_inst.rows);
+				_inst._selection=Debugger_ListFindFirstItem(_inst._rows);
 				Debugger_ListResetNav(_inst);
 			}
 		}
 
 		var search_key_hit=false;
 		if(keyboard_check_pressed(vk_backspace)){
-			_inst.search_repeat_key=vk_backspace;
-			_inst.search_repeat_char="";
-			_inst.search_hold_time=0;
-			_inst.search_repeat_cd=0;
+			_inst._search_repeat_key=vk_backspace;
+			_inst._search_repeat_char="";
+			_inst._search_hold_time=0;
+			_inst._search_repeat_cd=0;
 			search_key_hit=true;
-			if(string_length(_inst.search_input)>0){
-				_inst.search_input=string_delete(_inst.search_input,string_length(_inst.search_input),1);
-				_inst.search_cursor_timer=0;
+			if(string_length(_inst._search_input)>0){
+				_inst._search_input=string_delete(_inst._search_input,string_length(_inst._search_input),1);
+				_inst._search_cursor_timer=0;
 				Debugger_ListApplySearchFilter(_inst);
 			}
 		}else if(keyboard_check_pressed(vk_anykey)&&!Debugger_ListIsSearchKeyBlacklisted(keyboard_key)){
 			if(keyboard_string!=""){
 				var sanitized=Debugger_ListSanitizeSearchInput(keyboard_string);
 				if(string_length(sanitized)>0){
-					_inst.search_repeat_key=keyboard_key;
-					_inst.search_repeat_char=string_char_at(sanitized,string_length(sanitized));
-					_inst.search_hold_time=0;
-					_inst.search_repeat_cd=0;
+					_inst._search_repeat_key=keyboard_key;
+					_inst._search_repeat_char=string_char_at(sanitized,string_length(sanitized));
+					_inst._search_hold_time=0;
+					_inst._search_repeat_cd=0;
 					search_key_hit=true;
-					_inst.search_input+=sanitized;
-					_inst.search_cursor_timer=0;
+					_inst._search_input+=sanitized;
+					_inst._search_cursor_timer=0;
 					Debugger_ListApplySearchFilter(_inst);
 				}
 				keyboard_string="";
 			}
 		}
 
-		if(!search_key_hit&&_inst.search_repeat_key!=-1&&keyboard_check(_inst.search_repeat_key)){
-			_inst.search_hold_time+=delta_time/1000000;
-			if(_inst.search_hold_time>=_inst.hold_delay){
-				_inst.search_repeat_cd-=delta_time/1000000;
-				if(_inst.search_repeat_cd<=0){
-					if(_inst.search_repeat_key==vk_backspace){
-						if(string_length(_inst.search_input)>0){
-							_inst.search_input=string_delete(_inst.search_input,string_length(_inst.search_input),1);
-							_inst.search_cursor_timer=0;
+		if(!search_key_hit&&_inst._search_repeat_key!=-1&&keyboard_check(_inst._search_repeat_key)){
+			_inst._search_hold_time+=delta_time/1000000;
+			if(_inst._search_hold_time>=_inst._hold_delay){
+				_inst._search_repeat_cd-=delta_time/1000000;
+				if(_inst._search_repeat_cd<=0){
+					if(_inst._search_repeat_key==vk_backspace){
+						if(string_length(_inst._search_input)>0){
+							_inst._search_input=string_delete(_inst._search_input,string_length(_inst._search_input),1);
+							_inst._search_cursor_timer=0;
 							Debugger_ListApplySearchFilter(_inst);
 						}
-					}else if(_inst.search_repeat_char!=""){
-						_inst.search_input+=_inst.search_repeat_char;
-						_inst.search_cursor_timer=0;
+					}else if(_inst._search_repeat_char!=""){
+						_inst._search_input+=_inst._search_repeat_char;
+						_inst._search_cursor_timer=0;
 						Debugger_ListApplySearchFilter(_inst);
 					}
-					_inst.search_repeat_cd=max(0.035,0.11-(_inst.search_hold_time-_inst.hold_delay)*0.04);
+					_inst._search_repeat_cd=max(0.035,0.11-(_inst._search_hold_time-_inst._hold_delay)*0.04);
 				}
 			}
-		}else if(!search_key_hit&&!keyboard_check(_inst.search_repeat_key)){
-			_inst.search_repeat_key=-1;
-			_inst.search_hold_time=0;
-			_inst.search_repeat_cd=0;
+		}else if(!search_key_hit&&!keyboard_check(_inst._search_repeat_key)){
+			_inst._search_repeat_key=-1;
+			_inst._search_hold_time=0;
+			_inst._search_repeat_cd=0;
 		}
 
-		if(keyboard_check_pressed(vk_anykey)&&string_length(_inst.search_input)==0){
+		if(keyboard_check_pressed(vk_anykey)&&string_length(_inst._search_input)==0){
 			Debugger_ListApplySearchFilter(_inst);
 		}
 
-		_inst.search_cursor_timer+=1;
+		_inst._search_cursor_timer+=1;
 	}else{
-		var first_item=Debugger_ListFindFirstItem(_inst.rows);
-		if(keyboard_check_pressed(vk_up)&&_inst.selection==first_item){
-			_inst.search_mode=true;
-			_inst.search_cursor_timer=0;
+		var first_item=Debugger_ListFindFirstItem(_inst._rows);
+		if(keyboard_check_pressed(vk_up)&&_inst._selection==first_item){
+			_inst._search_mode=true;
+			_inst._search_cursor_timer=0;
 			keyboard_string="";
 		}
 
 		if(keyboard_check_pressed(vk_anykey)&&!Debugger_ListIsSearchKeyBlacklisted(keyboard_key)&&keyboard_string!=""){
 			var sanitized=Debugger_ListSanitizeSearchInput(keyboard_string);
 			if(string_length(sanitized)>0){
-				_inst.search_mode=true;
-				_inst.search_input=sanitized;
-				_inst.search_repeat_key=keyboard_key;
-				_inst.search_repeat_char=string_char_at(sanitized,string_length(sanitized));
-				_inst.search_cursor_timer=0;
+				_inst._search_mode=true;
+				_inst._search_input=sanitized;
+				_inst._search_repeat_key=keyboard_key;
+				_inst._search_repeat_char=string_char_at(sanitized,string_length(sanitized));
+				_inst._search_cursor_timer=0;
 				keyboard_string="";
 				Debugger_ListApplySearchFilter(_inst);
 			}
 		}
 	}
 
-	if(_inst.search_mode){
+	if(_inst._search_mode){
 		if(keyboard_check_pressed(vk_escape)||keyboard_check_pressed(ord("X"))){
 			instance_destroy(_inst);
 		}
@@ -501,7 +508,7 @@ function Debugger_ListStepSearch(_inst){
 
 ///@arg inst
 function Debugger_ListStepNav(_inst){
-	var count=array_length(_inst.rows);
+	var count=array_length(_inst._rows);
 	if(count<=0){
 		if(keyboard_check_pressed(vk_escape)||keyboard_check_pressed(ord("X"))){
 			instance_destroy(_inst);
@@ -514,39 +521,39 @@ function Debugger_ListStepNav(_inst){
 
 	if(keyboard_check_pressed(vk_up)){
 		dir=-1;
-		_inst.hold_dir=-1;
-		_inst.hold_time=0;
-		_inst.repeat_cd=0;
+		_inst._hold_dir=-1;
+		_inst._hold_time=0;
+		_inst._repeat_cd=0;
 		moved=true;
 	}else if(keyboard_check_pressed(vk_down)){
 		dir=1;
-		_inst.hold_dir=1;
-		_inst.hold_time=0;
-		_inst.repeat_cd=0;
+		_inst._hold_dir=1;
+		_inst._hold_time=0;
+		_inst._repeat_cd=0;
 		moved=true;
 	}
 
 	var holding_up=keyboard_check(vk_up);
 	var holding_down=keyboard_check(vk_down);
 	if(holding_up||holding_down){
-		_inst.hold_dir=holding_up?-1:1;
-		_inst.hold_time+=delta_time/1000000;
-		if(_inst.hold_time>=_inst.hold_delay){
-			_inst.repeat_cd-=delta_time/1000000;
-			if(_inst.repeat_cd<=0){
-				dir=_inst.hold_dir;
+		_inst._hold_dir=holding_up?-1:1;
+		_inst._hold_time+=delta_time/1000000;
+		if(_inst._hold_time>=_inst._hold_delay){
+			_inst._repeat_cd-=delta_time/1000000;
+			if(_inst._repeat_cd<=0){
+				dir=_inst._hold_dir;
 				moved=true;
-				_inst.repeat_cd=max(0.035,0.11-(_inst.hold_time-_inst.hold_delay)*0.04);
+				_inst._repeat_cd=max(0.035,0.11-(_inst._hold_time-_inst._hold_delay)*0.04);
 			}
 		}
 	}else{
-		_inst.hold_dir=0;
-		_inst.hold_time=0;
-		_inst.repeat_cd=0;
+		_inst._hold_dir=0;
+		_inst._hold_time=0;
+		_inst._repeat_cd=0;
 	}
 
 	if(moved&&dir!=0){
-		var next=_inst.selection;
+		var next=_inst._selection;
 		var guard=0;
 		do{
 			next+=dir;
@@ -556,13 +563,13 @@ function Debugger_ListStepNav(_inst){
 				next=0;
 			}
 			guard+=1;
-		}until(_inst.rows[next].kind=="item"||guard>count);
-		_inst.selection=next;
+		}until(_inst._rows[next].kind=="item"||guard>count);
+		_inst._selection=next;
 	}
 
 	if(keyboard_check_pressed(vk_left)||keyboard_check_pressed(vk_right)){
 		var cdir=keyboard_check_pressed(vk_left)?-1:1;
-		var i=_inst.selection;
+		var i=_inst._selection;
 		var guard=0;
 		var seen_header=false;
 		do{
@@ -572,46 +579,45 @@ function Debugger_ListStepNav(_inst){
 			}else if(i>=count){
 				i=0;
 			}
-			if(_inst.rows[i].kind=="header"){
+			if(_inst._rows[i].kind=="header"){
 				seen_header=true;
-			}else if(seen_header&&_inst.rows[i].kind=="item"){
-				_inst.selection=i;
+			}else if(seen_header&&_inst._rows[i].kind=="item"){
+				_inst._selection=i;
 				break;
 			}
 			guard+=1;
 		}until(guard>count);
 	}
 
-	var max_scroll=max(0,count-_inst.visible_rows);
+	var max_scroll=max(0,count-_inst._visible_rows);
 	var edge_pad=5;
-	if(_inst.visible_rows<=edge_pad*2+1){
-		edge_pad=max(1,floor((_inst.visible_rows-1)/2));
+	if(_inst._visible_rows<=edge_pad*2+1){
+		edge_pad=max(1,floor((_inst._visible_rows-1)/2));
 	}
-	var view_top=_inst.scroll_target+edge_pad;
-	var view_bottom=_inst.scroll_target+_inst.visible_rows-1-edge_pad;
-	if(_inst.selection<view_top){
-		_inst.scroll_target=_inst.selection-edge_pad;
-	}else if(_inst.selection>view_bottom){
-		_inst.scroll_target=_inst.selection-(_inst.visible_rows-1-edge_pad);
+	var view_top=_inst._scroll_target+edge_pad;
+	var view_bottom=_inst._scroll_target+_inst._visible_rows-1-edge_pad;
+	if(_inst._selection<view_top){
+		_inst._scroll_target=_inst._selection-edge_pad;
+	}else if(_inst._selection>view_bottom){
+		_inst._scroll_target=_inst._selection-(_inst._visible_rows-1-edge_pad);
 	}
-	_inst.scroll_target=clamp(_inst.scroll_target,0,max_scroll);
+	_inst._scroll_target=clamp(_inst._scroll_target,0,max_scroll);
 
-	_inst.scroll=lerp(_inst.scroll,_inst.scroll_target,0.4);
-	if(abs(_inst.scroll-_inst.scroll_target)<0.03){
-		_inst.scroll=_inst.scroll_target;
+	_inst._scroll=lerp(_inst._scroll,_inst._scroll_target,0.4);
+	if(abs(_inst._scroll-_inst._scroll_target)<0.03){
+		_inst._scroll=_inst._scroll_target;
 	}
 
-	draw_set_font(Lang_GetFont("determination_mono",font_mars_needs_cunnilingus));
-	var line_full=string_height("A")+4;
-	_inst.line_full=line_full;
-	var sel_target_y=(_inst.selection-_inst.scroll)*line_full;
-	_inst.sel_y=lerp(_inst.sel_y,sel_target_y,0.35);
-	if(abs(_inst.sel_y-sel_target_y)<0.5){
-		_inst.sel_y=sel_target_y;
+	var line_full=Debugger_ListLineFull();
+	_inst._line_full=line_full;
+	var sel_target_y=(_inst._selection-_inst._scroll)*line_full;
+	_inst._sel_y=lerp(_inst._sel_y,sel_target_y,0.35);
+	if(abs(_inst._sel_y-sel_target_y)<0.5){
+		_inst._sel_y=sel_target_y;
 	}
 
 	if(keyboard_check_pressed(vk_enter)||keyboard_check_pressed(ord("Z"))){
-		var row=_inst.rows[_inst.selection];
+		var row=_inst._rows[_inst._selection];
 		if(row.kind=="item"){
 			_inst.on_select(row.value);
 			instance_destroy(_inst);

@@ -18,15 +18,15 @@ function Shop_IsExists(shop_id){
 ///@arg menu_dialog
 ///@arg bgm*
 function Shop_Set(){
-	var sid=argument[0];
-	var host=argument[1];
-	var dialog=argument[2];
-	var bgm=-1;
-	if(argument_count>=4)bgm=argument[3];
-	global._shop[$ string(sid)]={
-		host:host,
-		menu_dialog:dialog,
-		bgm:bgm
+	var SID=argument[0];
+	var HOST=argument[1];
+	var DIALOG=argument[2];
+	var BGM=-1;
+	if(argument_count>=4)BGM=argument[3];
+	global._shop[$ string(SID)]={
+		host:HOST,
+		menu_dialog:DIALOG,
+		bgm:BGM
 	};
 	return true;
 }
@@ -44,7 +44,7 @@ function Shop_GetBGM(shop_id){
 }
 
 ///@arg shop_id
-function Shop_GetMenuDialogFromShopCustom(shop_id){
+function Shop_GetRegisteredMenuDialog(shop_id){
 	if(!Shop_IsExists(shop_id))return "";
 	return global._shop[$ string(shop_id)].menu_dialog;
 }
@@ -64,22 +64,28 @@ function Shop_Start(shop_id){
 }
 
 function Shop_End(){
-	var room_return=Storage_GetTempGeneral().Get(FLAG_TEMP_SHOP_ROOM_RETURN,-1);
-	if(room_exists(room_return)){
-		fader.color=c_black;
-		Fader_Fade(0,1,20);
-		BGM_SetVolume(4,0,20);
-		BGM_Resume(0);
-		BGM_SetVolume(0,1,20);
+	var temp=Storage_GetTempGeneral();
+	var room_return=temp.Get(FLAG_TEMP_SHOP_ROOM_RETURN,-1);
+	if(!room_exists(room_return)){
+		show_message("Room to return doesn't exist: "+string(room_return)+"!");
+		room_return=room_next(room_first);
+		temp.Set(FLAG_TEMP_SHOP_ROOM_RETURN,room_return);
 	}
+	fader.color=c_black;
+	Fader_Fade(0,1,20);
+	BGM_SetVolume(4,0,20);
+	BGM_Resume(0);
+	BGM_SetVolume(0,1,20);
+	return true;
 }
 
 ///@arg event  SHOP_HOST_EVENT.*
-function Shop_CallHostEvent(_event){
+function Shop_CallHostEvent(){
+	var EVENT=argument[0];
 	if(!instance_exists(shop))return false;
 	if(!instance_exists(shop._host_inst))return false;
 	with(shop._host_inst){
-		event_user(_event);
+		event_user(EVENT);
 	}
 	return true;
 }
@@ -98,7 +104,7 @@ function Shop_SetState(){
 	shop._state=STATE;
 	if(STATE==SHOP_STATE.MENU&&MAIN){
 		Shop_CallHostEvent(SHOP_HOST_EVENT.MENU_START);
-		Shop_SetMenu(SHOP_MENU.MENU,false);
+		Shop_SetMenu(SHOP_MENU.MENU);
 	}
 	return true;
 }
@@ -120,9 +126,10 @@ function Shop_GetNextMenu(){
 }
 
 ///@arg next  SHOP_MENU.*
-function Shop_SetNextMenu(_next){
+function Shop_SetNextMenu(){
+	var NEXT=argument[0];
 	if(!instance_exists(shop))return false;
-	shop._menu_next=_next;
+	shop._menu_next=NEXT;
 	return true;
 }
 
@@ -151,9 +158,10 @@ function Shop_IsDialogAutoEnd(){
 }
 
 ///@arg auto_end
-function Shop_SetDialogAutoEnd(v){
+function Shop_SetDialogAutoEnd(){
+	var AUTO_END=argument[0];
 	if(!instance_exists(shop))return false;
-	shop._dialog_auto_end=v;
+	shop._dialog_auto_end=AUTO_END;
 	return true;
 }
 
@@ -234,9 +242,10 @@ function Shop_IsBuyFree(){
 }
 
 ///@arg free
-function Shop_SetBuyFree(v){
+function Shop_SetBuyFree(){
+	var FREE=argument[0];
 	if(!instance_exists(shop))return false;
-	shop._buy_free=v;
+	shop._buy_free=FREE;
 	return true;
 }
 
@@ -245,9 +254,10 @@ function Shop_GetBuyResult(){
 }
 
 ///@arg result  SHOP_BUY_RESULT.*
-function Shop_SetBuyResult(r){
+function Shop_SetBuyResult(){
+	var RESULT=argument[0];
 	if(!instance_exists(shop))return false;
-	shop._buy_result=r;
+	shop._buy_result=RESULT;
 	return true;
 }
 
@@ -256,9 +266,10 @@ function Shop_GetSellResult(){
 }
 
 ///@arg result  SHOP_SELL_RESULT.*
-function Shop_SetSellResult(r){
+function Shop_SetSellResult(){
+	var RESULT=argument[0];
 	if(!instance_exists(shop))return false;
-	shop._sell_result=r;
+	shop._sell_result=RESULT;
 	return true;
 }
 

@@ -5,7 +5,7 @@
   "isDnD": false,
   "isCompatibility": false,
   "parent": {
-    "name": "Data",
-    "path": "folders/Scripts/Custom/Data.yy",
+    "name": "Custom",
+    "path": "folders/Scripts/Storage/Custom.yy",
   },
 }

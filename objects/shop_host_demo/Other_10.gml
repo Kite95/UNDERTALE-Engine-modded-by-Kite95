@@ -1,4 +1,5 @@
 /// INIT — catalog + route template
+Shop_SetMainChoice(1,SHOP_MAIN_ACTION.SELL,Lang_GetString("shop.menu.choice.1"));
 //_geno=(Player_GetKills()>=1);
 
 // 0: default stock 1

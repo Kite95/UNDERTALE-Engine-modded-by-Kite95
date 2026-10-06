@@ -1,6 +1,8 @@
 {
-    "battle.menu.mercy.spare": "* 饶恕",
-    "battle.menu.mercy.flee": "* 逃跑",
+    "battle.menu.prefix": "* ",
+    "battle.menu.item.page": "第{insert PAGE}页",
+    "battle.menu.mercy.spare": "饶恕",
+    "battle.menu.mercy.flee": "逃跑",
     "battle.result.won": "* 你胜利了！\n* 你获得了 {insert EXP} EXP和 {insert GOLD} 金钱。",
     "battle.result.fled.0": "* 逃跑了...",
     "battle.result.fled.1": "* 先走一步。",

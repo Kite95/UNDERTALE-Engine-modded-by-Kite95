@@ -34,7 +34,7 @@ function Battle_SetMenu() {
 				if(Battle_IsEnemySpareable(proc)){
 					text+="{color `yellow`}"
 				}
-				text+=Battle_GetEnemyName(proc)+"{color `white`}\n";
+				text+=Battle_GetMenuPrefix()+Battle_GetEnemyName(proc)+"{color `white`}\n";
 			}
 			proc+=1;
 		}
@@ -73,10 +73,10 @@ function Battle_SetMenu() {
 		//创建行动列表文字
 		repeat(Battle_GetEnemyActionNumber(ENEMY)){
 			if(!target){
-				text+=Battle_GetEnemyActionName(ENEMY,proc)+"\n";
+				text+=Battle_GetMenuPrefix()+Battle_GetEnemyActionName(ENEMY,proc)+"\n";
 				target=!target;
 			}else{
-				text2+=Battle_GetEnemyActionName(ENEMY,proc)+"\n";
+				text2+=Battle_GetMenuPrefix()+Battle_GetEnemyActionName(ENEMY,proc)+"\n";
 				target=!target;
 			}
 			proc+=1;
@@ -89,7 +89,9 @@ function Battle_SetMenu() {
 	//物品
 	if(MENU==BATTLE_MENU.ITEM){
 		Battle_SetMenuChoiceItem(0,false);
-		instance_create_depth(0,0,0,battle_menu_item_scrollbar);
+		if(BATTLE_MENU_ITEM_LAYOUT_CURRENT==BATTLE_MENU_ITEM_LAYOUT.VERTICAL){
+			instance_create_depth(0,0,0,battle_menu_item_scrollbar);
+		}
 	}
 
 	//仁慈
@@ -110,12 +112,12 @@ function Battle_SetMenu() {
 				}
 				proc+=1;
 			}
-			text+=Lang_GetString("battle.menu.mercy.spare");
+			text+=Battle_GetMenuPrefix()+Lang_GetString("battle.menu.mercy.spare");
 		
 			//逃跑是否可用
 			if(Battle_IsMenuMercyFleeEnabled()){
 				text+="\n{color `white`}";
-				text+=Lang_GetString("battle.menu.mercy.flee");
+				text+=Battle_GetMenuPrefix()+Lang_GetString("battle.menu.mercy.flee");
 			}
 		}else{
 			if(Battle_GetMenuChoiceMercy()>=Battle_GetMenuChoiceMercyOverrideNumber()){
@@ -124,7 +126,7 @@ function Battle_SetMenu() {
 		
 			var proc=0;
 			repeat(Battle_GetMenuChoiceMercyOverrideNumber()){
-				text+=Battle_GetMenuChoiceMercyOverrideName(proc);
+				text+=Battle_GetMenuPrefix()+Battle_GetMenuChoiceMercyOverrideName(proc);
 				text+="\n";
 				proc+=1;
 			}

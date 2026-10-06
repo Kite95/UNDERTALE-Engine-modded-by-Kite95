@@ -1,9 +1,7 @@
-Battle_SetTurnTime(-1)
+Battle_SetTurnTime(150)
 start = 1
 
 instance_create_depth(0,0,0,battle_bullet_test)
-instance_create_depth(320,320,0,battle_bullet_kill)
-instance_create_depth(0,500,0,battle_bg)
 
 /*aa = Battle_CreateBoardExtra(320,320)
 Battle_AddBoardExtraVertex(aa,lengthdir_x(100,90),lengthdir_y(100,90))

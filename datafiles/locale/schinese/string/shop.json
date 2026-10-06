@@ -6,6 +6,8 @@
   "shop.menu.choice.take": "拿取",
   "shop.menu.choice.steal": "偷窃",
   "shop.menu.choice.read": "阅读",
+  "shop.menu.geno.steal": "{gold 50}* （你拿走了{insert GOLD}G。）",
+  "shop.menu.geno.read": "* （有一张纸条。）\n* 「别再来了。」",
   "shop.menu.exit": "离开",
   "shop.menu.page": "第{insert PAGE}页",
   "shop.menu.talk.new": "（新）",

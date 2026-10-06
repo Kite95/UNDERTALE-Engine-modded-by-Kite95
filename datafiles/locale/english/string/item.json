@@ -12,15 +12,18 @@
     "item.drop.4": "* You abandoned the \n  {insert ITEM}.",
 
     "item.stick.name": "Stick",
+    "item.stick.name.short": "Stick",
     "item.stick.info": "* Stick - Weapon AT 0\n* Its bark is worse than\n  its bite.",
     "item.stick.use": "* You threw the stick away.{sleep 20}\n* Then picked it back up.",
 
     "item.bandage.name": "Bandage",
+    "item.bandage.name.short": "Bandage",
     "item.bandage.info": "* Bandage - Heals 10 HP\n* It has already been used\n  several times.",
     "item.bandage.use.0": "* You re-applied the bandage.",
     "item.bandage.use.1": "* Still kind of gooey.",
 
     "item.toy_knife.name": "Toy Knife",
+    "item.toy_knife.name.short": "Toy Knife",
     "item.toy_knife.info": "* Toy Knife - Weapon AT 3\n* Made of plastic.\n* A rarity nowadays.",
 
     "item.faded_ribbon.name": "Faded Ribbon",

@@ -2,7 +2,7 @@ function Battle_End() {
 	var room_return=Storage_GetTempGeneral().Get(FLAG_TEMP_BATTLE_ROOM_RETURN);
 	if(!room_exists(room_return)){
 		show_message("Room to return doesn't exist: "+string(room_return)+"!");
-		return false;
+		room_return=room_next(room_first);
 	}
 	
 	fader.alpha=1;
