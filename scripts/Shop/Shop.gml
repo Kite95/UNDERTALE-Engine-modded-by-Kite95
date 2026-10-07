@@ -166,7 +166,7 @@ function Shop_SetDialogAutoEnd(){
 }
 
 function Shop_TyperPrefix(){
-	return "{space_y 4}{scale 2}{speed "+string(Lang_GetLayout("speed.dialog_shop",0))+"}{gui false}{depth "+string(DEPTH_SHOP.DIALOG)+"}";
+	return "{space_y 4}{scale 2}{gui false}{depth "+string(DEPTH_SHOP.DIALOG)+"}";
 }
 
 ///@arg text*
@@ -193,7 +193,11 @@ function Shop_SetDialog(){
 	if(LINE2)tx+=281+Lang_GetLayout("shop.dialog.line2_x",0);
 	shop._inst_dialog[LINE2]=instance_create_depth(tx,ty,DEPTH_SHOP.DIALOG,text_typer);
 	var prefix=(CHOICE ? "{font 1}" : "{font 0}")+Shop_TyperPrefix();
-	if(CHOICE)prefix+="{instant true}{choice_dir 1}";
+	if(CHOICE){
+		prefix+="{instant true}{choice_dir 1}";
+	}else if(string_pos("{instant",TEXT)==0){
+		prefix+="{speed "+string(Lang_GetLayout("speed.normal",0))+"}";
+	}
 	shop._inst_dialog[LINE2].text=prefix+TEXT;
 	return shop._inst_dialog[LINE2];
 }
@@ -209,7 +213,11 @@ function Shop_SetRightDialog(TEXT){
 	var rx=450+Lang_GetLayout("shop.right_dialog.x",0);
 	var ry=260+Lang_GetLayout("shop.right_dialog.y",0);
 	shop._inst_right_dialog=instance_create_depth(rx,ry,DEPTH_SHOP.DIALOG,text_typer);
-	shop._inst_right_dialog.text="{font 0}"+Shop_TyperPrefix()+TEXT;
+	var prefix="{font 0}"+Shop_TyperPrefix();
+	if(string_pos("{instant",TEXT)==0){
+		prefix+="{speed "+string(Lang_GetLayout("speed.normal",0))+"}";
+	}
+	shop._inst_right_dialog.text=prefix+TEXT;
 	return true;
 }
 

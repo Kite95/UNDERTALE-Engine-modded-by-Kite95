@@ -8,6 +8,6 @@ if(instance_exists(char_player)){
 
 _dialog_x=60+Lang_GetLayout("dialog.x",0);
 _dialog_y=(_top ? 30 : 340)+Lang_GetLayout(_top ? "dialog.y_top" : "dialog.y_bottom",0);
-_dialog_speed=Lang_GetLayout("speed.dialog_overworld",0);
+_dialog_speed=Lang_GetLayout("speed.normal",0);
 
 _inst=noone;

@@ -11,6 +11,7 @@ var inst=instance_create_depth(sx,sy,0,soul_break);
 alarm[0]=inst.time;
 
 _inst_text=noone;
+_dialog_speed=Lang_GetLayout("speed.slow",0);
 _bg_alpha=0;
 
 if(instance_exists(fader)){

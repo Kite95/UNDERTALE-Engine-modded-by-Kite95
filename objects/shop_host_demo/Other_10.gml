@@ -13,8 +13,7 @@ Shop_AddBuy(ITEM_TOY_KNIFE,50,Lang_GetString("shop.demo.buy.knife.desc"),SHOP_SL
 // 4: phone
 Shop_AddBuy(ITEM_PHONE_TML,100,Lang_GetString("shop.demo.buy.phone.desc"));
 // 5: mystery box — infinite stock, custom shelf name
-Shop_AddBuy(ITEM_BANDAGE,200,Lang_GetString("shop.demo.buy.mystery.desc"),SHOP_SLOT.OPEN,-1);
-Shop_PatchBuy(5,{display_name:Lang_GetString("shop.demo.buy.mystery.name")});
+Shop_AddBuy(ITEM_BANDAGE,200,Lang_GetString("shop.demo.buy.mystery.desc"),SHOP_SLOT.OPEN,-1,Lang_GetString("shop.demo.buy.mystery.name"));
 
 Shop_AddTalk(Lang_GetString("shop.demo.talk.name.0"),[
 	Lang_GetString("shop.demo.talk.0"),
@@ -34,9 +33,19 @@ Shop_AddTalk(Lang_GetString("shop.demo.talk.name.4"),[
 	Lang_GetString("shop.demo.talk.4")
 ]);
 
+var bonus_key=Shop_GetHostShortName()+"_bonus_talk";
+if(Plot_Get(bonus_key,0)!=0){
+	Shop_AddTalk(Lang_GetString("shop.demo.talk.bonus.name"),[
+		Lang_GetString("shop.demo.talk.bonus")
+	]);
+	if(Shop_GetTalkProgress(Shop_GetTalkNumber()-1)==0){
+		Shop_SetTalkNew(Shop_GetTalkNumber()-1);
+	}
+}
+
 if(_geno){
 	Shop_ApplyMainTemplate("geno");
-	Shop_PatchBuy(3,{state:SHOP_SLOT.OPEN});
+	Shop_SetBuy(3,ITEM_TOY_KNIFE,50,Lang_GetString("shop.demo.buy.knife.desc"),SHOP_SLOT.OPEN);
 	if(Plot_Get(Shop_GetHostShortName()+"_steal",0)!=0){
 		Shop_SetMainChoice(1,SHOP_MAIN_ACTION.DIALOG,Lang_GetString("shop.menu.choice.steal"),Lang_GetString("shop.demo.steal.done"));
 	}

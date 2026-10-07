@@ -20,6 +20,20 @@ function Shop_GetBuyEntry(INDEX){
 	return shop._buy_list[INDEX];
 }
 
+///0 = sold out. Above 0 reopens sold out. Locked stays locked.
+function Shop_ApplyStock(){
+	var ENTRY=argument[0];
+	if(!is_struct(ENTRY))return false;
+	var stock=-1;
+	if(variable_struct_exists(ENTRY,"stock"))stock=ENTRY.stock;
+	if(stock==0){
+		ENTRY.state=SHOP_SLOT.SOLD_OUT;
+	}else if(stock>0&&ENTRY.state==SHOP_SLOT.SOLD_OUT){
+		ENTRY.state=SHOP_SLOT.OPEN;
+	}
+	return true;
+}
+
 /// Load stock from static if key exists (after AddBuy / SetBuy).
 ///@arg index
 function Shop_LoadBuyStock(index){
@@ -31,11 +45,7 @@ function Shop_LoadBuyStock(index){
 	var s=data[$ key];
 	if(!is_real(s))return false;
 	e.stock=s;
-	if(s==0){
-		e.state=SHOP_SLOT.SOLD_OUT;
-	}else if(s>0&&e.state==SHOP_SLOT.SOLD_OUT){
-		e.state=SHOP_SLOT.OPEN;
-	}
+	Shop_ApplyStock(e);
 	return true;
 }
 
@@ -107,41 +117,13 @@ function Shop_SetBuy(){
 		stock:STOCK
 	};
 	if(DISPLAY_NAME!="")entry.display_name=DISPLAY_NAME;
-	if(STOCK==0)entry.state=SHOP_SLOT.SOLD_OUT;
+	Shop_ApplyStock(entry);
 	if(INDEX==n){
 		array_push(shop._buy_list,entry);
 	}else{
 		shop._buy_list[INDEX]=entry;
 	}
 	Shop_LoadBuyStock(INDEX);
-	return true;
-}
-
-/// Patch fields on an existing buy entry. Optional keys: price, desc, state, stock, display_name.
-/// stock: -1 infinite; 0 → SOLD_OUT; >0 restocks SOLD_OUT → OPEN (and saves).
-///@arg index
-///@arg patch
-function Shop_PatchBuy(index,patch){
-	var e=Shop_GetBuyEntry(index);
-	if(is_undefined(e)||!is_struct(patch))return false;
-	if(variable_struct_exists(patch,"price"))e.price=patch.price;
-	if(variable_struct_exists(patch,"desc"))e.desc=patch.desc;
-	if(variable_struct_exists(patch,"display_name"))e.display_name=patch.display_name;
-	if(variable_struct_exists(patch,"state"))e.state=patch.state;
-	if(variable_struct_exists(patch,"stock")){
-		var stock=patch.stock;
-		if(stock<0){
-			e.stock=-1;
-		}else{
-			e.stock=stock;
-			if(stock==0){
-				e.state=SHOP_SLOT.SOLD_OUT;
-			}else if(e.state==SHOP_SLOT.SOLD_OUT){
-				e.state=SHOP_SLOT.OPEN;
-			}
-		}
-		Shop_SaveBuyStock(index);
-	}
 	return true;
 }
 
@@ -268,7 +250,7 @@ function Shop_GetTalkName(index){
 	return shop._talk_list[index].name;
 }
 
-/// 0 never / odd = NEW unread / even = read (+ NEW for next if more)
+///Lines heard. 0 = none.
 ///@arg index
 function Shop_GetTalkProgress(index){
 	if(!instance_exists(shop))return 0;
@@ -285,6 +267,16 @@ function Shop_SetTalkProgress(index,progress){
 	return true;
 }
 
+///Yellow the first line for this visit.
+///@arg index
+function Shop_SetTalkNew(){
+	var INDEX=argument[0];
+	if(!instance_exists(shop))return false;
+	if(INDEX<0||INDEX>=array_length(shop._talk_list))return false;
+	shop._talk_list[INDEX].mark_new=true;
+	return true;
+}
+
 ///@arg index
 function Shop_GetTalkStageCount(index){
 	if(!instance_exists(shop))return 0;
@@ -292,60 +284,37 @@ function Shop_GetTalkStageCount(index){
 	return array_length(shop._talk_list[index].dialogs);
 }
 
+///Yellow when a later line is unread, or mark_new on the first.
 ///@arg index
-function Shop_GetTalkDialogIndex(index){
-	var n=Shop_GetTalkStageCount(index);
-	if(n<=0)return 0;
-	var p=Shop_GetTalkProgress(index);
-	var stage=0;
-	if(p<=0){
-		stage=0;
-	}else if(p mod 2==1){
-		stage=(p-1) div 2;
-	}else{
-		stage=p div 2;
-	}
-	return clamp(stage,0,n-1);
-}
-
-///@arg index
-function Shop_IsTalkNew(index){
-	var n=Shop_GetTalkStageCount(index);
+function Shop_IsTalkNew(){
+	var INDEX=argument[0];
+	var n=Shop_GetTalkStageCount(INDEX);
 	if(n<=0)return false;
-	var p=Shop_GetTalkProgress(index);
-	if(p==1)return true;
-	if(p>=3&&(p mod 2==1))return true;
-	if(n>1&&p>=2&&(p mod 2==0)&&(p div 2)<n)return true;
+	var heard=Shop_GetTalkProgress(INDEX);
+	if(heard>0&&heard<n)return true;
+	if(heard==0&&variable_struct_exists(shop._talk_list[INDEX],"mark_new")&&shop._talk_list[INDEX].mark_new)return true;
 	return false;
 }
 
 ///@arg index
-function Shop_GetTalkDialog(index){
+function Shop_GetTalkDialog(){
+	var INDEX=argument[0];
 	if(!instance_exists(shop))return "";
-	if(index<0||index>=array_length(shop._talk_list))return "";
-	var dialogs=shop._talk_list[index].dialogs;
+	if(INDEX<0||INDEX>=array_length(shop._talk_list))return "";
+	var dialogs=shop._talk_list[INDEX].dialogs;
 	var n=array_length(dialogs);
 	if(n<=0)return "";
-	return dialogs[Shop_GetTalkDialogIndex(index)];
+	return dialogs[clamp(Shop_GetTalkProgress(INDEX),0,n-1)];
 }
 
-/// After selecting a talk: 0/1→2, odd→+1, even→+2 (cap at 2*stageCount).
+///Hear one more line, stop at the last.
 ///@arg index
-function Shop_AdvanceTalk(index){
-	var n=Shop_GetTalkStageCount(index);
+function Shop_AdvanceTalk(){
+	var INDEX=argument[0];
+	var n=Shop_GetTalkStageCount(INDEX);
 	if(n<=0)return false;
-	var p=Shop_GetTalkProgress(index);
-	var next;
-	if(p<=0){
-		next=2;
-	}else if(p mod 2==1){
-		next=p+1;
-	}else{
-		next=p+2;
-	}
-	var maxp=2*n;
-	if(next>maxp)next=maxp;
-	Shop_SetTalkProgress(index,next);
+	var heard=Shop_GetTalkProgress(INDEX);
+	if(heard<n)Shop_SetTalkProgress(INDEX,heard+1);
 	return true;
 }
 
@@ -402,11 +371,9 @@ function Shop_TryBuy(index){
 	var stock=Shop_GetBuyStock(index);
 	if(stock>=0){
 		stock-=1;
+		if(stock<0)stock=0;
 		e.stock=stock;
-		if(stock<=0){
-			e.stock=0;
-			e.state=SHOP_SLOT.SOLD_OUT;
-		}
+		Shop_ApplyStock(e);
 		Shop_SaveBuyStock(index);
 	}
 	SFX_Play(snd_item_equip,0,false);

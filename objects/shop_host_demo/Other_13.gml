@@ -20,21 +20,18 @@ if(_geno&&Shop_GetNextMenu()==SHOP_MENU.MENU&&shop._menu_choice==1){
 }
 
 // Talk 0 progressed → unlock ribbon (index 2)
-if(Shop_GetTalkProgress(0)>=2&&Shop_GetBuyNumber()>2){
+if(Shop_GetTalkProgress(0)>=1&&Shop_GetBuyNumber()>2){
 	if(Shop_GetSlotState(2)==SHOP_SLOT.LOCKED){
-		Shop_PatchBuy(2,{
-			state:SHOP_SLOT.OPEN,
-			desc:Lang_GetString("shop.demo.buy.ribbon.desc")
-		});
+		Shop_SetBuy(2,ITEM_FADED_RIBBON,25,Lang_GetString("shop.demo.buy.ribbon.desc"),SHOP_SLOT.OPEN);
 	}
 }
 
 // Joke (talk 3) done once → append hidden talk
 var bonus_key=Shop_GetHostShortName()+"_bonus_talk";
-if(Shop_GetTalkProgress(3)>=2&&Plot_Get(bonus_key,0)==0){
+if(Shop_GetTalkProgress(3)>=1&&Plot_Get(bonus_key,0)==0){
 	Plot_Set(bonus_key,1);
 	Shop_AddTalk(Lang_GetString("shop.demo.talk.bonus.name"),[
 		Lang_GetString("shop.demo.talk.bonus")
 	]);
-	Shop_SetTalkProgress(Shop_GetTalkNumber()-1,1);
+	Shop_SetTalkNew(Shop_GetTalkNumber()-1);
 }

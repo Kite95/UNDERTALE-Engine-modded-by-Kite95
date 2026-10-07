@@ -52,4 +52,4 @@ switch(template){
 }
 
 visible=true;
-_inst.text="{color_text `black`}{speed "+string(Lang_GetLayout("speed.dialog_battle_enemy",0))+"}{font 2}{depth "+string(DEPTH_BATTLE.UI_HIGH-10)+"}"+text+"{pause}{end}";
+_inst.text="{color_text `black`}{speed "+string(_dialog_speed)+"}{font 2}{depth "+string(DEPTH_BATTLE.UI_HIGH-10)+"}"+text+"{pause}{end}";

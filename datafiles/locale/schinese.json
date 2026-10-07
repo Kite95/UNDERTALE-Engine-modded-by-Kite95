@@ -13,11 +13,8 @@
       "return_x": 30
     },
     "speed": {
-      "dialog_overworld": 1,
-      "dialog_battle": 1,
-      "dialog_battle_enemy": 1,
-      "dialog_shop": 1,
-      "dialog_gameover": 1
+      "normal": 1,
+      "slow": 1
     }
   },
   "strings": [

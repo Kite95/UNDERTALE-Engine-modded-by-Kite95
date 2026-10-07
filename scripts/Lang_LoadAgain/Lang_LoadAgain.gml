@@ -11,5 +11,11 @@ function Lang_LoadAgain() {
 	Lang_LoadLanguage(Language());
 
 	global._gmu_lang_loading=false;
+	if(variable_global_exists("_shop")&&is_struct(global._shop)){
+		Shop_Custom();
+	}
+	if(variable_global_exists("_encounter")&&ds_exists(global._encounter,ds_type_map)){
+		Encounter_Custom();
+	}
 	return true;
 }

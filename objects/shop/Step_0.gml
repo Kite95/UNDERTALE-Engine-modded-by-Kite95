@@ -1,11 +1,7 @@
-var shop_state=Shop_GetState();
-var shop_menu=Shop_GetMenu();
-var shop_menu_buy=Shop_GetMenuBuy();
-var shop_menu_sell=Shop_GetMenuSell();
 var inv=Item_GetInventoryItems();
 
-if(shop_state==SHOP_STATE.MENU){
-	if(shop_menu==SHOP_MENU.MENU){
+if(_state==SHOP_STATE.MENU){
+	if(_menu==SHOP_MENU.MENU){
 		if(Input_IsPressed(INPUT.DOWN)){
 			var n=_menu_choice;
 			repeat(4){
@@ -57,7 +53,7 @@ if(shop_state==SHOP_STATE.MENU){
 					_dialog_pending=true;
 					break;
 				case SHOP_MAIN_ACTION.DIALOG:
-					// Same pattern as sell-empty refuse: text then back to main
+					//Show the slot text, then return to the main menu.
 					var dd=Shop_GetMainDialog(_menu_choice);
 					if(dd=="") break;
 					Dialog_Add(dd);
@@ -76,8 +72,8 @@ if(shop_state==SHOP_STATE.MENU){
 		}
 	}
 
-	if(shop_menu==SHOP_MENU.BUY){
-		if(shop_menu_buy==SHOP_BUY.MENU){
+	if(_menu==SHOP_MENU.BUY){
+		if(_menu_buy==SHOP_BUY.MENU){
 			if(Input_IsPressed(INPUT.CANCEL)||(Input_IsPressed(INPUT.CONFIRM)&&_buy_choice==4)){
 				Shop_SetNextMenu(SHOP_MENU.MENU);
 				Shop_CallHostEvent(SHOP_HOST_EVENT.MENU_SWITCH);
@@ -88,20 +84,51 @@ if(shop_state==SHOP_STATE.MENU){
 				var buy_shown=Shop_GetListShown(Shop_GetBuyNumber());
 				var buy_choice_was=_buy_choice;
 				var buy_page_was=_page_buy;
+				//VERTICAL steps. PAGE steps and turns pages.
 				if(SHOP_MENU_LIST_LAYOUT_CURRENT==SHOP_MENU_LIST_LAYOUT.VERTICAL){
-					var buy_moved=Shop_StepVerticalChoice(_buy_choice,_page_buy,buy_shown);
-					_buy_choice=buy_moved[0];
-					if(buy_moved[1]!=_page_buy){
-						_page_buy=buy_moved[1];
+					if(buy_shown<=0){
+						_buy_choice=4;
+						_page_buy=0;
+					}else{
+						var buy_slot=_page_buy;
+						var buy_exit=(_buy_choice==4);
+						if(!buy_exit)buy_slot=_page_buy+_buy_choice;
+						if(Input_IsPressed(INPUT.DOWN)){
+							if(!buy_exit){
+								if(buy_slot+1<buy_shown)buy_slot+=1;
+								else buy_exit=true;
+							}
+						}
+						if(Input_IsPressed(INPUT.UP)){
+							if(buy_exit){
+								buy_slot=buy_shown-1;
+								buy_exit=false;
+							}else if(buy_slot>0){
+								buy_slot-=1;
+							}
+						}
+						if(buy_exit){
+							_buy_choice=4;
+							_page_buy=max(0,buy_shown-4);
+						}else{
+							var buy_first=_page_buy;
+							if(buy_slot>=buy_first+4)buy_first=buy_slot-3;
+							else if(buy_slot<buy_first)buy_first=buy_slot;
+							var buy_first_max=max(0,buy_shown-4);
+							if(buy_first<0)buy_first=0;
+							if(buy_first>buy_first_max)buy_first=buy_first_max;
+							_page_buy=buy_first;
+							_buy_choice=buy_slot-buy_first;
+						}
+					}
+					if(_page_buy!=buy_page_was){
 						Shop_SetMenuBuy(SHOP_BUY.MENU,_page_buy);
 					}
 				}else{
 					_buy_choice=Shop_StepPageChoice(_buy_choice,buy_shown,_page_buy);
 					if(_buy_choice<4&&Shop_GetBuyPageMax()>1){
-						var buy_page=Shop_StepListPage(_page_buy,_buy_choice,buy_shown);
-						if(buy_page[0]!=_page_buy||buy_page[1]!=_buy_choice){
-							_page_buy=buy_page[0];
-							_buy_choice=buy_page[1];
+						_buy_choice=Shop_TurnListPage(_page_buy,_buy_choice,buy_shown);
+						if(_page_buy!=buy_page_was){
 							Shop_SetMenuBuy(SHOP_BUY.MENU,_page_buy);
 						}
 					}
@@ -127,35 +154,31 @@ if(shop_state==SHOP_STATE.MENU){
 					}
 				}
 			}
-		}else if(shop_menu_buy==SHOP_BUY.CONFIRM){
-			var acted=false;
-			var buy_result=SHOP_BUY_RESULT.NO;
-			var clear_choice=false;
+		}else if(_menu_buy==SHOP_BUY.CONFIRM){
 			if(Input_IsPressed(INPUT.CANCEL)){
-				buy_result=SHOP_BUY_RESULT.NO;
-				clear_choice=true;
-				acted=true;
-			}else if(Player_GetTextTyperChoice()==0){
-				buy_result=Shop_TryBuy(Shop_GetBuyChoice());
-				clear_choice=true;
-				acted=true;
-			}else if(Player_GetTextTyperChoice()==1){
-				buy_result=SHOP_BUY_RESULT.NO;
-				clear_choice=true;
-				acted=true;
-			}
-			if(acted){
-				Shop_SetBuyResult(buy_result);
+				Shop_SetBuyResult(SHOP_BUY_RESULT.NO);
 				Shop_CallHostEvent(SHOP_HOST_EVENT.CONFIRM);
 				Shop_SetMenu(SHOP_MENU.BUY);
 				Shop_SetMenuBuy(SHOP_BUY.MENU,_page_buy);
-				if(clear_choice)Shop_ClearTextTyperChoice();
+				Shop_ClearTextTyperChoice();
+			}else if(Player_GetTextTyperChoice()==0){
+				Shop_SetBuyResult(Shop_TryBuy(Shop_GetBuyChoice()));
+				Shop_CallHostEvent(SHOP_HOST_EVENT.CONFIRM);
+				Shop_SetMenu(SHOP_MENU.BUY);
+				Shop_SetMenuBuy(SHOP_BUY.MENU,_page_buy);
+				Shop_ClearTextTyperChoice();
+			}else if(Player_GetTextTyperChoice()==1){
+				Shop_SetBuyResult(SHOP_BUY_RESULT.NO);
+				Shop_CallHostEvent(SHOP_HOST_EVENT.CONFIRM);
+				Shop_SetMenu(SHOP_MENU.BUY);
+				Shop_SetMenuBuy(SHOP_BUY.MENU,_page_buy);
+				Shop_ClearTextTyperChoice();
 			}
 		}
 	}
 
-	if(shop_menu==SHOP_MENU.SELL){
-		if(shop_menu_sell==SHOP_SELL.MENU){
+	if(_menu==SHOP_MENU.SELL){
+		if(_menu_sell==SHOP_SELL.MENU){
 			var count=inv.GetCount();
 			if(count==0){
 				_sell_choice=8;
@@ -189,7 +212,7 @@ if(shop_state==SHOP_STATE.MENU){
 				if(_sell_choice<count&&Shop_GetItemSellPrice(inv.Get(_sell_choice))>0){
 					Shop_SetMenuSell(SHOP_SELL.CONFIRM);
 				}
-				// unsellable: no confirm / no tip — just ignore
+				//Unsellable: ignore.
 			}
 			if(Input_IsPressed(INPUT.CANCEL)||(Input_IsPressed(INPUT.CONFIRM)&&_sell_choice==8)){
 				Shop_SetNextMenu(SHOP_MENU.MENU);
@@ -198,26 +221,29 @@ if(shop_state==SHOP_STATE.MENU){
 				_dialog_pending=true;
 				_menu_sell=-1;
 			}
-		}else if(shop_menu_sell==SHOP_SELL.CONFIRM){
-			var sell_acted=false;
-			var sell_result=SHOP_SELL_RESULT.NO;
-			var sell_clear=false;
+		}else if(_menu_sell==SHOP_SELL.CONFIRM){
 			if(Input_IsPressed(INPUT.CANCEL)){
-				sell_clear=true;
-				sell_acted=true;
+				Shop_SetSellResult(SHOP_SELL_RESULT.NO);
+				Shop_CallHostEvent(SHOP_HOST_EVENT.CONFIRM);
+				Shop_ClearTextTyperChoice();
+				Shop_SetNextMenu(SHOP_MENU.SELL);
+				Shop_CallHostEvent(SHOP_HOST_EVENT.MENU_SWITCH);
+				Shop_SetState(SHOP_STATE.DIALOG);
+				_dialog_pending=true;
 			}else if(Player_GetTextTyperChoice()==0){
-				sell_result=Shop_TrySell(_sell_choice);
-				sell_clear=true;
-				sell_acted=true;
-			}else if(Player_GetTextTyperChoice()==1){
-				sell_clear=true;
-				sell_acted=true;
-			}
-			if(sell_acted){
+				var sell_result=Shop_TrySell(_sell_choice);
 				Shop_SetSellResult(sell_result);
 				Shop_CallHostEvent(SHOP_HOST_EVENT.CONFIRM);
-				if(sell_clear)Shop_ClearTextTyperChoice();
+				Shop_ClearTextTyperChoice();
 				if(sell_result==SHOP_SELL_RESULT.YES)_sell_choice=0;
+				Shop_SetNextMenu(SHOP_MENU.SELL);
+				Shop_CallHostEvent(SHOP_HOST_EVENT.MENU_SWITCH);
+				Shop_SetState(SHOP_STATE.DIALOG);
+				_dialog_pending=true;
+			}else if(Player_GetTextTyperChoice()==1){
+				Shop_SetSellResult(SHOP_SELL_RESULT.NO);
+				Shop_CallHostEvent(SHOP_HOST_EVENT.CONFIRM);
+				Shop_ClearTextTyperChoice();
 				Shop_SetNextMenu(SHOP_MENU.SELL);
 				Shop_CallHostEvent(SHOP_HOST_EVENT.MENU_SWITCH);
 				Shop_SetState(SHOP_STATE.DIALOG);
@@ -226,7 +252,7 @@ if(shop_state==SHOP_STATE.MENU){
 		}
 	}
 
-	if(shop_menu==SHOP_MENU.TALK){
+	if(_menu==SHOP_MENU.TALK){
 		if(Input_IsPressed(INPUT.CANCEL)||(Input_IsPressed(INPUT.CONFIRM)&&_talk_choice==4)){
 			Shop_SetNextMenu(SHOP_MENU.MENU);
 			Shop_CallHostEvent(SHOP_HOST_EVENT.MENU_SWITCH);
@@ -236,20 +262,51 @@ if(shop_state==SHOP_STATE.MENU){
 			var talk_shown=Shop_GetListShown(Shop_GetTalkNumber());
 			var talk_choice_was=_talk_choice;
 			var talk_page_was=_page_talk;
+			//VERTICAL steps. PAGE steps and turns pages.
 			if(SHOP_MENU_LIST_LAYOUT_CURRENT==SHOP_MENU_LIST_LAYOUT.VERTICAL){
-				var talk_moved=Shop_StepVerticalChoice(_talk_choice,_page_talk,talk_shown);
-				_talk_choice=talk_moved[0];
-				if(talk_moved[1]!=_page_talk){
-					_page_talk=talk_moved[1];
+				if(talk_shown<=0){
+					_talk_choice=4;
+					_page_talk=0;
+				}else{
+					var talk_slot=_page_talk;
+					var talk_exit=(_talk_choice==4);
+					if(!talk_exit)talk_slot=_page_talk+_talk_choice;
+					if(Input_IsPressed(INPUT.DOWN)){
+						if(!talk_exit){
+							if(talk_slot+1<talk_shown)talk_slot+=1;
+							else talk_exit=true;
+						}
+					}
+					if(Input_IsPressed(INPUT.UP)){
+						if(talk_exit){
+							talk_slot=talk_shown-1;
+							talk_exit=false;
+						}else if(talk_slot>0){
+							talk_slot-=1;
+						}
+					}
+					if(talk_exit){
+						_talk_choice=4;
+						_page_talk=max(0,talk_shown-4);
+					}else{
+						var talk_first=_page_talk;
+						if(talk_slot>=talk_first+4)talk_first=talk_slot-3;
+						else if(talk_slot<talk_first)talk_first=talk_slot;
+						var talk_first_max=max(0,talk_shown-4);
+						if(talk_first<0)talk_first=0;
+						if(talk_first>talk_first_max)talk_first=talk_first_max;
+						_page_talk=talk_first;
+						_talk_choice=talk_slot-talk_first;
+					}
+				}
+				if(_page_talk!=talk_page_was){
 					Shop_SetMenuTalk(_page_talk);
 				}
 			}else{
 				_talk_choice=Shop_StepPageChoice(_talk_choice,talk_shown,_page_talk);
 				if(_talk_choice<4&&Shop_GetTalkPageMax()>1){
-					var talk_page=Shop_StepListPage(_page_talk,_talk_choice,talk_shown);
-					if(talk_page[0]!=_page_talk||talk_page[1]!=_talk_choice){
-						_page_talk=talk_page[0];
-						_talk_choice=talk_page[1];
+					_talk_choice=Shop_TurnListPage(_page_talk,_talk_choice,talk_shown);
+					if(_page_talk!=talk_page_was){
 						Shop_SetMenuTalk(_page_talk);
 					}
 				}
@@ -270,7 +327,7 @@ if(shop_state==SHOP_STATE.MENU){
 		}
 	}
 
-	if(shop_menu==SHOP_MENU.EXIT){
+	if(_menu==SHOP_MENU.EXIT){
 		if(fader.alpha>=1){
 			Fader_Fade(1,0,20);
 			BGM_Stop(4);
@@ -278,7 +335,7 @@ if(shop_state==SHOP_STATE.MENU){
 			if(room_exists(room_return))room_goto(room_return);
 		}
 	}
-}else if(shop_state==SHOP_STATE.DIALOG){
+}else if(_state==SHOP_STATE.DIALOG){
 	if(_dialog_pending){
 		_dialog_pending=false;
 		Shop_ClearUITypers();

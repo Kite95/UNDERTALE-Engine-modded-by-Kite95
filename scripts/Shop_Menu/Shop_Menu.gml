@@ -170,36 +170,6 @@ function Shop_SetMenu(){
 	return true;
 }
 
-/// PAGE: page index. VERTICAL: window start.
-///@arg page
-///@arg shown
-function Shop_ListWindow(){
-	var PAGE=argument[0];
-	var SHOWN=argument[1];
-	var first=PAGE*4;
-	if(SHOP_MENU_LIST_LAYOUT_CURRENT==SHOP_MENU_LIST_LAYOUT.VERTICAL){
-		var max_first=max(0,SHOWN-4);
-		if(PAGE<0)PAGE=0;
-		if(PAGE>max_first)PAGE=max_first;
-		first=PAGE;
-	}
-	return [PAGE,first];
-}
-
-/// 4 is Exit. A row past the filled slots drops back onto the last filled row.
-///@arg choice
-///@arg first
-///@arg shown
-function Shop_ClampListChoice(){
-	var CHOICE=argument[0];
-	var FIRST=argument[1];
-	var SHOWN=argument[2];
-	var slots=min(4,max(0,SHOWN-FIRST));
-	if(slots<=0)return 4;
-	if(CHOICE!=4&&(CHOICE<0||CHOICE>=slots))return slots-1;
-	return CHOICE;
-}
-
 ///@arg menu  SHOP_BUY.*
 ///@arg page*
 function Shop_SetMenuBuy(){
@@ -212,9 +182,40 @@ function Shop_SetMenuBuy(){
 	if(MENU==SHOP_BUY.MENU){
 		var shown=Shop_GetListShown(Shop_GetBuyNumber());
 		var rows=4;
-		var win=Shop_ListWindow(PAGE,shown);
-		PAGE=win[0];
-		var first=win[1];
+		var first=0;
+		//VERTICAL: window start. PAGE: page * 4.
+		if(SHOP_MENU_LIST_LAYOUT_CURRENT==SHOP_MENU_LIST_LAYOUT.VERTICAL){
+			var first_max=max(0,shown-4);
+			if(PAGE<0)PAGE=0;
+			if(PAGE>first_max)PAGE=first_max;
+			if(shown<=0){
+				shop._buy_choice=4;
+				PAGE=0;
+			}else if(shop._buy_choice==4){
+				PAGE=first_max;
+			}else{
+				var slot=PAGE+shop._buy_choice;
+				if(slot<0)slot=0;
+				if(slot>=shown)slot=shown-1;
+				while(slot>=PAGE+4)PAGE+=1;
+				while(slot<PAGE)PAGE-=1;
+				if(PAGE<0)PAGE=0;
+				if(PAGE>first_max)PAGE=first_max;
+				if(slot<PAGE)slot=PAGE;
+				if(slot>=PAGE+4)slot=PAGE+3;
+				if(slot>=shown)slot=shown-1;
+				shop._buy_choice=slot-PAGE;
+			}
+			first=PAGE;
+		}else{
+			first=PAGE*4;
+			var slots=min(4,max(0,shown-first));
+			if(slots<=0){
+				shop._buy_choice=4;
+			}else if(shop._buy_choice!=4&&(shop._buy_choice<0||shop._buy_choice>=slots)){
+				shop._buy_choice=slots-1;
+			}
+		}
 		shop._page_buy=PAGE;
 		var text="";
 		for(var i=first;i<first+rows;i+=1){
@@ -231,7 +232,6 @@ function Shop_SetMenuBuy(){
 		}
 		text+=Lang_GetString("shop.menu.exit");
 		Shop_SetDialog(text,true);
-		shop._buy_choice=Shop_ClampListChoice(shop._buy_choice,first,shown);
 		if(SHOP_MENU_LIST_LAYOUT_CURRENT==SHOP_MENU_LIST_LAYOUT.PAGE){
 			Shop_SetPageIndicator(PAGE,Shop_GetBuyPageMax());
 		}else if(instance_exists(shop._inst_page)){
@@ -316,13 +316,45 @@ function Shop_SetMenuSell(){
 }
 
 ///@arg page
-function Shop_SetMenuTalk(PAGE){
+function Shop_SetMenuTalk(){
+	var PAGE=argument[0];
 	if(!instance_exists(shop))return false;
 	var shown=Shop_GetListShown(Shop_GetTalkNumber());
 	var rows=4;
-	var win=Shop_ListWindow(PAGE,shown);
-	PAGE=win[0];
-	var first=win[1];
+	var first=0;
+	//VERTICAL: window start. PAGE: page * 4.
+	if(SHOP_MENU_LIST_LAYOUT_CURRENT==SHOP_MENU_LIST_LAYOUT.VERTICAL){
+		var first_max=max(0,shown-4);
+		if(PAGE<0)PAGE=0;
+		if(PAGE>first_max)PAGE=first_max;
+		if(shown<=0){
+			shop._talk_choice=4;
+			PAGE=0;
+		}else if(shop._talk_choice==4){
+			PAGE=first_max;
+		}else{
+			var slot=PAGE+shop._talk_choice;
+			if(slot<0)slot=0;
+			if(slot>=shown)slot=shown-1;
+			while(slot>=PAGE+4)PAGE+=1;
+			while(slot<PAGE)PAGE-=1;
+			if(PAGE<0)PAGE=0;
+			if(PAGE>first_max)PAGE=first_max;
+			if(slot<PAGE)slot=PAGE;
+			if(slot>=PAGE+4)slot=PAGE+3;
+			if(slot>=shown)slot=shown-1;
+			shop._talk_choice=slot-PAGE;
+		}
+		first=PAGE;
+	}else{
+		first=PAGE*4;
+		var slots=min(4,max(0,shown-first));
+		if(slots<=0){
+			shop._talk_choice=4;
+		}else if(shop._talk_choice!=4&&(shop._talk_choice<0||shop._talk_choice>=slots)){
+			shop._talk_choice=slots-1;
+		}
+	}
 	shop._page_talk=PAGE;
 	var text="";
 	var new_suffix=Lang_GetString("shop.menu.talk.new");
@@ -339,7 +371,6 @@ function Shop_SetMenuTalk(PAGE){
 	}
 	text+=Lang_GetString("shop.menu.exit");
 	Shop_SetDialog(text,true);
-	shop._talk_choice=Shop_ClampListChoice(shop._talk_choice,first,shown);
 	if(SHOP_MENU_LIST_LAYOUT_CURRENT==SHOP_MENU_LIST_LAYOUT.PAGE){
 		Shop_SetPageIndicator(PAGE,Shop_GetTalkPageMax());
 	}else if(instance_exists(shop._inst_page)){
@@ -409,18 +440,16 @@ function Shop_GetListShown(){
 	return min(COUNT,SHOP_MENU_LIST_PAGE_MAX*4);
 }
 
+///Turn the list page. Returns the row.
 ///@arg page
 ///@arg choice
 ///@arg count
-function Shop_StepListPage(){
+function Shop_TurnListPage(){
 	var PAGE=argument[0];
 	var CHOICE=argument[1];
 	var COUNT=argument[2];
-
 	var page_max=max(1,ceil(COUNT/4));
-	if(page_max<=1){
-		return [PAGE,CHOICE];
-	}
+	if(page_max<=1)return CHOICE;
 	var turned=false;
 	if(Input_IsPressed(INPUT.RIGHT)){
 		PAGE=(PAGE>=page_max-1 ? 0 : PAGE+1);
@@ -435,75 +464,13 @@ function Shop_StepListPage(){
 		if(CHOICE!=4&&CHOICE>=slots){
 			CHOICE=(slots<=0 ? 4 : slots-1);
 		}
-	}
-	return [PAGE,CHOICE];
-}
-
-///Four-row window. 4 is Exit. Stops at the ends.
-///@arg choice
-///@arg first
-///@arg count
-function Shop_StepVerticalChoice(){
-	var CHOICE=argument[0];
-	var FIRST=argument[1];
-	var COUNT=argument[2];
-
-	if(COUNT<=0){
-		return [4,0];
-	}
-	var first_max=max(0,COUNT-4);
-	if(FIRST<0){
-		FIRST=0;
-	}
-	if(FIRST>first_max){
-		FIRST=first_max;
-	}
-	if(CHOICE!=4){
-		if(CHOICE<0){
-			CHOICE=0;
-		}
-		if(CHOICE>3){
-			CHOICE=3;
-		}
-		if(FIRST+CHOICE>=COUNT){
-			CHOICE=COUNT-1-FIRST;
+		if(shop._menu==SHOP_MENU.BUY){
+			shop._page_buy=PAGE;
+		}else{
+			shop._page_talk=PAGE;
 		}
 	}
-
-	var slot=FIRST;
-	if(CHOICE!=4){
-		slot=FIRST+CHOICE;
-	}
-	if(Input_IsPressed(INPUT.DOWN)){
-		if(CHOICE!=4){
-			if(slot+1<COUNT){
-				slot+=1;
-			}else{
-				CHOICE=4;
-			}
-		}
-	}
-	if(Input_IsPressed(INPUT.UP)){
-		if(CHOICE==4){
-			slot=COUNT-1;
-			CHOICE=0;
-		}else if(slot>0){
-			slot-=1;
-		}
-	}
-
-	if(CHOICE==4){
-		FIRST=first_max;
-	}else{
-		while(slot>=FIRST+4){
-			FIRST+=1;
-		}
-		while(slot<FIRST){
-			FIRST-=1;
-		}
-		CHOICE=slot-FIRST;
-	}
-	return [CHOICE,FIRST];
+	return CHOICE;
 }
 
 function Shop_DrawListScrollbar(){
