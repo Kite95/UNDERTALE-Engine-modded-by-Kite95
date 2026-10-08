@@ -13,12 +13,6 @@ _inst_item_inventory=noone;
 _inst_item_box=noone;
 _inst_finish=noone;
 
-var sound=snd_weapon_equip;
-if(audio_exists(sound)){
-	audio_stop_sound(sound);
-	SFX_Play(sound,0,false);
-}
-
 if(instance_exists(char_player)){
 	char_player._moveable_box=false;
 }

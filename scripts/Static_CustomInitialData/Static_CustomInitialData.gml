@@ -9,7 +9,7 @@ function Static_CustomInitialData(){
 	Player_SetAtkItem(0);
 	Player_SetDef(10);
 	Player_SetDefItem(0);
-	Player_SetSpd(2);
+	Player_SetSpd(4);
 	Player_SetSpdItem(0);
 	Player_SetInv(40);
 	Player_SetInvItem(0);

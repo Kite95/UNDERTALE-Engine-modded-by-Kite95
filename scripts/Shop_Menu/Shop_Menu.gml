@@ -7,12 +7,6 @@ function Shop_DefineBuiltinMainTemplates(){
 		{action: SHOP_MAIN_ACTION.TALK,label_key:"shop.menu.choice.2"},
 		{action: SHOP_MAIN_ACTION.EXIT,label_key:"shop.menu.choice.3"}
 	]);
-	Shop_DefineMainTemplate("geno",[
-		{action: SHOP_MAIN_ACTION.BUY,label_key:"shop.menu.choice.take",free:true},
-		{action: SHOP_MAIN_ACTION.DIALOG,label_key:"shop.menu.choice.steal",dialog_key:"shop.menu.geno.steal"},
-		{action: SHOP_MAIN_ACTION.DIALOG,label_key:"shop.menu.choice.read",dialog_key:"shop.menu.geno.read"},
-		{action: SHOP_MAIN_ACTION.EXIT,label_key:"shop.menu.choice.3"}
-	]);
 }
 
 ///@arg name

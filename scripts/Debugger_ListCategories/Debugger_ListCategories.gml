@@ -62,7 +62,7 @@ function Debugger_ListEncounterCategoryDefs(){
 }
 
 function Debugger_ListEncounterCategoryOrder(){
-	return ["SINGLE","PARTY!","BOSS","OTHER"];
+	return ["OTHER","SINGLE","PARTY!","BOSS"];
 }
 
 function Debugger_ListClassifyEncounter(_eid){
